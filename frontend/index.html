@@ -1,105 +1,149 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
-
 <meta charset="UTF-8">
-<title>NetflixLight</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NetflixerLight</title>
 <link rel="stylesheet" href="css/style.css">
-
 </head>
+<body>
+<div class="page-shell">
+    <header class="site-header">
+        <a class="brand" href="#top" aria-label="Retour en haut">NetflixerLight</a>
+        <nav class="site-nav" aria-label="Navigation">
+            <a href="#trending-section">Tendances</a>
+            <a href="#movies-section">Films</a>
+            <a href="#series-section">Series</a>
+            <a href="#watchlist-section">Ma liste</a>
+        </nav>
+        <label class="search-field" for="search-input">
+            <span class="search-label">Recherche</span>
+            <input id="search-input" type="search" placeholder="Chercher un film ou une serie" autocomplete="off">
+        </label>
+    </header>
 
-<body class="bg-black text-white">
+    <main class="page-main" id="top">
+        <section class="hero" id="hero">
+            <div class="hero-backdrop" id="hero-backdrop"></div>
+            <div class="hero-gradient"></div>
+            <div class="hero-body">
+                <p class="eyebrow">Selection du moment</p>
+                <h1 class="hero-title" id="hero-title">Chargement...</h1>
+                <div class="hero-meta" id="hero-meta"></div>
+                <p class="hero-overview" id="hero-overview">Le mini Netflix charge les tendances TMDB.</p>
+                <div class="hero-actions">
+                    <button class="primary-button" id="hero-play" type="button">Voir la fiche</button>
+                    <button class="secondary-button" id="hero-list" type="button">Ajouter a ma liste</button>
+                </div>
+            </div>
+        </section>
 
-<header class="navbar">
+        <section class="notice is-hidden" id="app-notice" aria-live="polite"></section>
 
-<h1 class="logo">
-NetflixLight
-</h1>
+        <section class="media-section is-hidden" id="search-section">
+            <div class="section-header">
+                <div>
+                    <p class="section-kicker">Recherche</p>
+                    <h2>Resultats</h2>
+                </div>
+                <p class="section-copy" id="search-summary"></p>
+            </div>
+            <div class="media-track" id="search-track"></div>
+        </section>
 
-<nav class="menu">
+        <section class="media-section" id="watchlist-section">
+            <div class="section-header">
+                <div>
+                    <p class="section-kicker">Local</p>
+                    <h2>Ma liste</h2>
+                </div>
+                <p class="section-copy">Stockee dans le navigateur, sans backend.</p>
+            </div>
+            <div class="media-track" id="watchlist-track"></div>
+        </section>
 
-<a href="#">Accueil</a>
-<a href="#">Films</a>
-<a href="#">Séries</a>
+        <section class="media-section" id="trending-section">
+            <div class="section-header">
+                <div>
+                    <p class="section-kicker">Cette semaine</p>
+                    <h2>Tendances</h2>
+                </div>
+                <p class="section-copy">Les films et series qui ressortent maintenant.</p>
+            </div>
+            <div class="media-track" id="trending-track"></div>
+        </section>
 
-</nav>
+        <section class="media-section" id="movies-section">
+            <div class="section-header">
+                <div>
+                    <p class="section-kicker">Cinema</p>
+                    <h2>Films populaires</h2>
+                </div>
+                <p class="section-copy">Les films les plus consultes du moment.</p>
+            </div>
+            <div class="media-track" id="movies-track"></div>
+        </section>
 
-<input
-type="text"
-placeholder="Rechercher..."
-class="search"
-/>
+        <section class="media-section" id="top-section">
+            <div class="section-header">
+                <div>
+                    <p class="section-kicker">Selection</p>
+                    <h2>Top notes</h2>
+                </div>
+                <p class="section-copy">Les films qui sortent le plus du lot.</p>
+            </div>
+            <div class="media-track" id="top-track"></div>
+        </section>
 
-</header>
-
-<main>
-
-<section class="hero-banner">
-
-<div class="hero-overlay"></div>
-
-<div class="hero-content">
-
-<h1 class="hero-title">
-Featured Movie
-</h1>
-
-<p class="hero-description">
-Un film populaire affiché dans la bannière principale.
-</p>
-
-<div class="hero-buttons">
-
-<button class="play-btn">
-▶ Lecture
-</button>
-
-<button class="info-btn">
-Plus d'infos
-</button>
-
+        <section class="media-section" id="series-section">
+            <div class="section-header">
+                <div>
+                    <p class="section-kicker">Streaming</p>
+                    <h2>Series populaires</h2>
+                </div>
+                <p class="section-copy">Les series a forte traction en ce moment.</p>
+            </div>
+            <div class="media-track" id="series-track"></div>
+        </section>
+    </main>
 </div>
 
+<div class="modal is-hidden" id="detail-modal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <button class="modal-close" type="button" data-close-modal aria-label="Fermer">Fermer</button>
+        <div class="modal-hero" id="modal-hero"></div>
+        <div class="modal-content">
+            <div class="modal-main">
+                <p class="modal-kicker" id="modal-kicker"></p>
+                <h2 id="modal-title">Chargement...</h2>
+                <div class="detail-meta" id="modal-meta"></div>
+                <p class="modal-overview" id="modal-overview"></p>
+                <div class="detail-actions">
+                    <a class="primary-button is-hidden" id="modal-trailer" href="#" target="_blank" rel="noreferrer">Bande annonce</a>
+                    <button class="secondary-button" id="modal-watchlist" type="button">Ajouter a ma liste</button>
+                </div>
+            </div>
+            <aside class="modal-side">
+                <dl class="detail-grid">
+                    <div>
+                        <dt>Genres</dt>
+                        <dd id="modal-genres">-</dd>
+                    </div>
+                    <div>
+                        <dt>Langue</dt>
+                        <dd id="modal-language">-</dd>
+                    </div>
+                    <div>
+                        <dt>Popularite</dt>
+                        <dd id="modal-popularity">-</dd>
+                    </div>
+                </dl>
+            </aside>
+        </div>
+    </div>
 </div>
 
-</section>
-
-
-<section class="carousel-section">
-
-<h2>Trending Now</h2>
-
-<div class="carousel">
-
-<div class="movie-card"></div>
-<div class="movie-card"></div>
-<div class="movie-card"></div>
-<div class="movie-card"></div>
-
-</div>
-
-</section>
-
-
-<section class="carousel-section">
-
-<h2>Popular Movies</h2>
-
-<div class="carousel">
-
-<div class="movie-card"></div>
-<div class="movie-card"></div>
-<div class="movie-card"></div>
-
-</div>
-
-</section>
-
-</main>
-
+<script type="module" src="js/app.js"></script>
 </body>
 </html>

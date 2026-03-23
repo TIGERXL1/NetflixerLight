@@ -1,0 +1,7 @@
+export const API_KEY = "2dd87e8040906777d4be20c45e75fd6e";
+export const API_BASE_URL = "https://api.themoviedb.org/3";
+export const IMAGE_BASE_URL = "https://image.tmdb.org/t/p";
+export const WATCHLIST_STORAGE_KEY = "netflixerlight_watchlist";
+
+export const POSTER_FALLBACK = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 900"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e50914"/><stop offset="100%" stop-color="#0d1726"/></linearGradient></defs><rect width="600" height="900" fill="url(#g)"/><text x="50%" y="48%" fill="#fff6ed" text-anchor="middle" font-family="Arial, sans-serif" font-size="48">NetflixerLight</text><text x="50%" y="56%" fill="#ffd8bd" text-anchor="middle" font-family="Arial, sans-serif" font-size="22">Poster indisponible</text></svg>')}`;
+export const BACKDROP_FALLBACK = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1b3352"/><stop offset="100%" stop-color="#05080f"/></linearGradient></defs><rect width="1600" height="900" fill="url(#g)"/><text x="120" y="460" fill="#fff3e5" font-family="Arial, sans-serif" font-size="94">NetflixerLight</text><text x="120" y="540" fill="#f0a33b" font-family="Arial, sans-serif" font-size="38">Mini streaming front only</text></svg>')}`;
