@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inscription | NetflixerLight</title>
+<link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+<main class="auth-page">
+    <section class="auth-shell">
+        <div class="auth-showcase">
+            <a class="brand" href="index.html">NetflixerLight</a>
+            <p class="auth-kicker">Inscription</p>
+            <h1 class="auth-title">Cree ton compte et prepare ta liste</h1>
+            <p class="auth-copy">Aucun backend n'est utilise ici. L'inscription cree simplement un compte local pour cette demo front.</p>
+        </div>
+
+        <div class="auth-panel">
+            <p class="auth-kicker">Creer un compte</p>
+            <h1>Inscription</h1>
+            <p>Renseigne tes informations pour activer la session locale.</p>
+
+            <form class="auth-form" id="signup-form">
+                <label class="field">
+                    <span>Nom</span>
+                    <input id="signup-name" type="text" required autocomplete="name">
+                </label>
+                <label class="field">
+                    <span>Email</span>
+                    <input id="signup-email" type="email" required autocomplete="email">
+                </label>
+                <label class="field">
+                    <span>Mot de passe</span>
+                    <input id="signup-password" type="password" required autocomplete="new-password">
+                </label>
+                <label class="field">
+                    <span>Confirmer le mot de passe</span>
+                    <input id="signup-confirm" type="password" required autocomplete="new-password">
+                </label>
+                <p class="auth-message" id="signup-message"></p>
+                <button class="auth-button" type="submit">Creer le compte</button>
+            </form>
+
+            <p class="auth-switch">Tu as deja un compte ? <a href="login.html">Se connecter</a></p>
+        </div>
+    </section>
+</main>
+<script type="module" src="js/signup.js"></script>
+</body>
+</html>

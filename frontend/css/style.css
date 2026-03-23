@@ -91,6 +91,29 @@ img {
     font-size: 0.95rem;
 }
 
+.account-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.session-pill,
+.session-button {
+    min-height: 2.5rem;
+    padding: 0.55rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text);
+    font-size: 0.88rem;
+}
+
+.session-pill {
+    display: inline-flex;
+    align-items: center;
+    color: var(--muted);
+}
+
 .search-field {
     display: flex;
     align-items: center;
@@ -456,6 +479,11 @@ body.modal-open {
 
     .search-field {
         width: 100%;
+    }
+
+    .account-bar {
+        width: 100%;
+        justify-content: center;
     }
 
     .hero {

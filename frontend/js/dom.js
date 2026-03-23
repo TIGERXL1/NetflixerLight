@@ -6,6 +6,8 @@ export const elements = {
     heroOverview: document.getElementById("hero-overview"),
     heroPlay: document.getElementById("hero-play"),
     heroList: document.getElementById("hero-list"),
+    sessionUser: document.getElementById("session-user"),
+    logoutButton: document.getElementById("logout-button"),
     searchInput: document.getElementById("search-input"),
     searchSection: document.getElementById("search-section"),
     searchSummary: document.getElementById("search-summary"),

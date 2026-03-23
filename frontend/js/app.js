@@ -1,4 +1,5 @@
 import { fetchDetails, fetchHomeFeed as fetchHomeFeedData, fetchSearchResults } from "./api.js";
+import { logoutUser, requireAuth } from "./auth-store.js";
 import { elements } from "./dom.js";
 import {
     closeModal,
@@ -23,9 +24,14 @@ import {
 } from "./state.js";
 import { createSkeletonCards, normalizeResults, pickFeatured } from "./utils.js";
 
-initApp();
+const currentUser = requireAuth("login.html");
 
-async function initApp() {
+if (currentUser) {
+    initApp(currentUser);
+}
+
+async function initApp(currentUserData) {
+    elements.sessionUser.textContent = currentUserData.name || currentUserData.email || "Compte";
     bindEvents();
     renderLoadingTracks();
     renderWatchlist();
@@ -101,6 +107,11 @@ function bindEvents() {
             renderAllRows();
             renderSearchState();
         }
+    });
+
+    elements.logoutButton.addEventListener("click", () => {
+        logoutUser();
+        window.location.replace("login.html");
     });
 }
 

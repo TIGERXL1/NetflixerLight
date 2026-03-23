@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connexion | NetflixerLight</title>
+<link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+<main class="auth-page">
+    <section class="auth-shell">
+        <div class="auth-showcase">
+            <a class="brand" href="index.html">NetflixerLight</a>
+            <p class="auth-kicker">Compte</p>
+            <h1 class="auth-title">Connecte-toi et lance ta session</h1>
+            <p class="auth-copy">Cette version est 100% front. Les comptes sont stockes localement dans ton navigateur pour la demo.</p>
+        </div>
+
+        <div class="auth-panel">
+            <p class="auth-kicker">Connexion</p>
+            <h1>Bon retour</h1>
+            <p>Entre ton email et ton mot de passe pour acceder a l'application.</p>
+
+            <form class="auth-form" id="login-form">
+                <label class="field">
+                    <span>Email</span>
+                    <input id="login-email" type="email" required autocomplete="email">
+                </label>
+                <label class="field">
+                    <span>Mot de passe</span>
+                    <input id="login-password" type="password" required autocomplete="current-password">
+                </label>
+                <p class="auth-message" id="login-message"></p>
+                <button class="auth-button" type="submit">Se connecter</button>
+            </form>
+
+            <p class="auth-switch">Pas encore de compte ? <a href="signup.html">Creer un compte</a></p>
+        </div>
+    </section>
+</main>
+<script type="module" src="js/login.js"></script>
+</body>
+</html>
