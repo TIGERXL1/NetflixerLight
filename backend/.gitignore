@@ -1,0 +1,33 @@
+# Environment variables (NEVER commit!)
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+
+# Database
+data/
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage & tests
+coverage/
+.nyc_output/
+node_modules/
