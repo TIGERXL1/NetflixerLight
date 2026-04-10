@@ -13,23 +13,21 @@ class Favorite {
    */
   static add(userId, tmdbId, mediaType) {
     return new Promise((resolve, reject) => {
-      const db = getDatabase();
-      const sql = `INSERT INTO favorites (user_id, tmdb_id, media_type) VALUES (?, ?, ?)`;
-
-      db.run(sql, [userId, tmdbId, mediaType], function(err) {
+      try {
+        const db = getDatabase();
+        const sql = `INSERT INTO favorites (user_id, tmdb_id, media_type) VALUES (?, ?, ?)`;
+        const info = db.prepare(sql).run(userId, tmdbId, mediaType);
         db.close();
-        
-        if (err) {
-          return reject(err);
-        }
 
         resolve({
-          id: this.lastID,
+          id: info.lastInsertRowid,
           user_id: userId,
           tmdb_id: tmdbId,
           media_type: mediaType
         });
-      });
+      } catch (err) {
+        reject(err);
+      }
     });
   }
 
@@ -42,18 +40,16 @@ class Favorite {
    */
   static remove(userId, tmdbId, mediaType) {
     return new Promise((resolve, reject) => {
-      const db = getDatabase();
-      const sql = `DELETE FROM favorites WHERE user_id = ? AND tmdb_id = ? AND media_type = ?`;
-
-      db.run(sql, [userId, tmdbId, mediaType], function(err) {
+      try {
+        const db = getDatabase();
+        const sql = `DELETE FROM favorites WHERE user_id = ? AND tmdb_id = ? AND media_type = ?`;
+        const info = db.prepare(sql).run(userId, tmdbId, mediaType);
         db.close();
-        
-        if (err) {
-          return reject(err);
-        }
 
-        resolve(this.changes > 0);
-      });
+        resolve(info.changes > 0);
+      } catch (err) {
+        reject(err);
+      }
     });
   }
 
@@ -64,18 +60,16 @@ class Favorite {
    */
   static getUserFavorites(userId) {
     return new Promise((resolve, reject) => {
-      const db = getDatabase();
-      const sql = `SELECT * FROM favorites WHERE user_id = ? ORDER BY added_at DESC`;
-
-      db.all(sql, [userId], (err, rows) => {
+      try {
+        const db = getDatabase();
+        const sql = `SELECT * FROM favorites WHERE user_id = ? ORDER BY added_at DESC`;
+        const rows = db.prepare(sql).all(userId);
         db.close();
-        
-        if (err) {
-          return reject(err);
-        }
 
         resolve(rows || []);
-      });
+      } catch (err) {
+        reject(err);
+      }
     });
   }
 
@@ -88,18 +82,16 @@ class Favorite {
    */
   static isFavorite(userId, tmdbId, mediaType) {
     return new Promise((resolve, reject) => {
-      const db = getDatabase();
-      const sql = `SELECT COUNT(*) as count FROM favorites WHERE user_id = ? AND tmdb_id = ? AND media_type = ?`;
-
-      db.get(sql, [userId, tmdbId, mediaType], (err, row) => {
+      try {
+        const db = getDatabase();
+        const sql = `SELECT COUNT(*) as count FROM favorites WHERE user_id = ? AND tmdb_id = ? AND media_type = ?`;
+        const row = db.prepare(sql).get(userId, tmdbId, mediaType);
         db.close();
-        
-        if (err) {
-          return reject(err);
-        }
 
-        resolve(row.count > 0);
-      });
+        resolve((row?.count || 0) > 0);
+      } catch (err) {
+        reject(err);
+      }
     });
   }
 }

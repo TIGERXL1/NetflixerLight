@@ -4,6 +4,7 @@
 const express = require('express');
 const cors = require('cors');
 const session = require('express-session');
+const path = require('path');
 const config = require('./config');
 const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
 
@@ -43,6 +44,9 @@ app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
   next();
 });
+
+const frontendPath = path.join(__dirname, '../../frontend');
+app.use(express.static(frontendPath));
 
 // ===== ROUTES =====
 

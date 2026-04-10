@@ -23,12 +23,15 @@ async function tmdbRequest(endpoint, params = {}) {
     url.searchParams.append(key, value);
   });
 
-  const response = await fetch(url.toString(), {
-    headers: {
-      'Authorization': `Bearer ${TMDB_BEARER_TOKEN}`,
-      'accept': 'application/json'
-    }
-  });
+  const headers = {
+    'accept': 'application/json'
+  };
+
+  if (TMDB_BEARER_TOKEN) {
+    headers.Authorization = `Bearer ${TMDB_BEARER_TOKEN}`;
+  }
+
+  const response = await fetch(url.toString(), { headers });
 
   if (!response.ok) {
     throw new Error(`TMDB API Error: ${response.status} ${response.statusText}`);
