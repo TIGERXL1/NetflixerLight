@@ -14,7 +14,7 @@ const DB_PATH = process.env.DB_PATH || path.join(__dirname, '../../data/netflixl
 function getDatabase() {
   try {
     const db = new Database(DB_PATH);
-    console.log('✅ Connecté à la base de données SQLite');
+    console.log('Connecté à la base de données SQLite');
     return db;
   } catch (err) {
     console.error('Erreur de connexion à la base de données:', err.message);
@@ -75,8 +75,39 @@ function initializeDatabase() {
   }
 }
 
+/**
+ * Nettoie toutes les tables (pour les tests)
+ */
+function clearDatabase() {
+  const db = getDatabase();
+
+  try {
+    db.exec('DELETE FROM favorites');
+    db.exec('DELETE FROM sessions');
+    db.exec('DELETE FROM users');
+    console.log('✅ Base de données nettoyée');
+  } catch (err) {
+    console.error('Erreur lors du nettoyage de la DB:', err.message);
+    throw err;
+  } finally {
+    db.close();
+  }
+}
+
+/**
+ * Ferme la connexion à la base de données (pour les tests)
+ */
+function closeDatabase() {
+  // SQLite ferme automatiquement les connexions, mais on garde cette fonction
+  // pour la compatibilité avec d'autres bases de données futures
+  console.log('✅ Connexion à la base de données fermée');
+  return Promise.resolve();
+}
+
 module.exports = {
   getDatabase,
   initializeDatabase,
+  clearDatabase,
+  closeDatabase,
   DB_PATH
 };
