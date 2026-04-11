@@ -85,6 +85,23 @@ function initializeDatabase() {
       CREATE INDEX IF NOT EXISTS idx_ratings_user ON ratings(user_id);
     `);
 
+    // Table viewing_history (historique de visionnage)
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS viewing_history (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        tmdb_id INTEGER NOT NULL,
+        media_type TEXT NOT NULL CHECK(media_type IN ('movie', 'tv')),
+        viewed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      )
+    `);
+
+    // Index pour optimiser les requêtes viewing_history
+    db.exec(`
+      CREATE INDEX IF NOT EXISTS idx_viewing_history_user ON viewing_history(user_id, viewed_at DESC);
+    `);
+
     console.log('✅ Tables de base de données initialisées');
   } catch (err) {
     console.error('Erreur lors de l\'initialisation de la DB:', err.message);
@@ -101,6 +118,7 @@ function clearDatabase() {
   const db = getDatabase();
 
   try {
+    db.exec('DELETE FROM viewing_history');
     db.exec('DELETE FROM ratings');
     db.exec('DELETE FROM favorites');
     db.exec('DELETE FROM sessions');

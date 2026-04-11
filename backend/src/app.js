@@ -13,6 +13,7 @@ const authRoutes = require('./routes/auth');
 const moviesRoutes = require('./routes/movies');
 const favoritesRoutes = require('./routes/favorites');
 const ratingsRoutes = require('./routes/ratings');
+const viewingHistoryRoutes = require('./routes/viewingHistory');
 
 // Créer l'application Express
 const app = express();
@@ -65,6 +66,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/tmdb', moviesRoutes);
 app.use('/api/favorites', favoritesRoutes);
 app.use('/api/ratings', ratingsRoutes);
+app.use('/api/history', viewingHistoryRoutes);
 
 // ===== GESTION DES ERREURS =====
 
