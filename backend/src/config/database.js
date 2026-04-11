@@ -66,6 +66,25 @@ function initializeDatabase() {
       )
     `);
 
+    // Table ratings
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS ratings (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        tmdb_id INTEGER NOT NULL,
+        media_type TEXT NOT NULL CHECK(media_type IN ('movie', 'tv')),
+        rating INTEGER NOT NULL CHECK(rating >= 1 AND rating <= 5),
+        rated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+        UNIQUE(user_id, tmdb_id, media_type)
+      )
+    `);
+
+    // Index pour optimiser les requêtes ratings
+    db.exec(`
+      CREATE INDEX IF NOT EXISTS idx_ratings_user ON ratings(user_id);
+    `);
+
     console.log('✅ Tables de base de données initialisées');
   } catch (err) {
     console.error('Erreur lors de l\'initialisation de la DB:', err.message);
@@ -82,6 +101,7 @@ function clearDatabase() {
   const db = getDatabase();
 
   try {
+    db.exec('DELETE FROM ratings');
     db.exec('DELETE FROM favorites');
     db.exec('DELETE FROM sessions');
     db.exec('DELETE FROM users');

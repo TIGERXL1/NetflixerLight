@@ -12,6 +12,7 @@ const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
 const authRoutes = require('./routes/auth');
 const moviesRoutes = require('./routes/movies');
 const favoritesRoutes = require('./routes/favorites');
+const ratingsRoutes = require('./routes/ratings');
 
 // Créer l'application Express
 const app = express();
@@ -63,6 +64,7 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/tmdb', moviesRoutes);
 app.use('/api/favorites', favoritesRoutes);
+app.use('/api/ratings', ratingsRoutes);
 
 // ===== GESTION DES ERREURS =====
 
