@@ -41,7 +41,7 @@ app.listen(PORT, () => {
   console.log(`   GET  /api/tmdb/movie/:id - Détails d'un film`);
   console.log(`   GET  /api/tmdb/tv/:id - Détails d'une série`);
   
-  console.log('\n⭐ Favoris (/api/favorites):');
+  console.log('\n Favoris (/api/favorites):');
   console.log(`   GET  /api/favorites - Liste des favoris (auth requise)`);
   console.log(`   POST /api/favorites - Ajouter un favori (auth requise)`);
   console.log(`   DELETE /api/favorites/:id - Supprimer un favori (auth requise)`);
