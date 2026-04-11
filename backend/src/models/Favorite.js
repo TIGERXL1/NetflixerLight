@@ -16,11 +16,11 @@ class Favorite {
       try {
         const db = getDatabase();
         const sql = `INSERT INTO favorites (user_id, tmdb_id, media_type) VALUES (?, ?, ?)`;
-        const info = db.prepare(sql).run(userId, tmdbId, mediaType);
-        db.close();
-
+        
+        const result = db.prepare(sql).run(userId, tmdbId, mediaType);
+        
         resolve({
-          id: info.lastInsertRowid,
+          id: result.lastInsertRowid,
           user_id: userId,
           tmdb_id: tmdbId,
           media_type: mediaType
@@ -43,10 +43,10 @@ class Favorite {
       try {
         const db = getDatabase();
         const sql = `DELETE FROM favorites WHERE user_id = ? AND tmdb_id = ? AND media_type = ?`;
-        const info = db.prepare(sql).run(userId, tmdbId, mediaType);
-        db.close();
-
-        resolve(info.changes > 0);
+        
+        const result = db.prepare(sql).run(userId, tmdbId, mediaType);
+        
+        resolve(result.changes > 0);
       } catch (err) {
         reject(err);
       }
@@ -63,9 +63,9 @@ class Favorite {
       try {
         const db = getDatabase();
         const sql = `SELECT * FROM favorites WHERE user_id = ? ORDER BY added_at DESC`;
+        
         const rows = db.prepare(sql).all(userId);
-        db.close();
-
+        
         resolve(rows || []);
       } catch (err) {
         reject(err);
@@ -85,10 +85,10 @@ class Favorite {
       try {
         const db = getDatabase();
         const sql = `SELECT COUNT(*) as count FROM favorites WHERE user_id = ? AND tmdb_id = ? AND media_type = ?`;
+        
         const row = db.prepare(sql).get(userId, tmdbId, mediaType);
-        db.close();
-
-        resolve((row?.count || 0) > 0);
+        
+        resolve(row.count > 0);
       } catch (err) {
         reject(err);
       }
