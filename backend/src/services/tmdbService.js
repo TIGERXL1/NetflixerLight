@@ -125,6 +125,16 @@ async function getGenres(mediaType = 'movie') {
   return tmdbRequest(`/genre/${mediaType}/list`);
 }
 
+/**
+ * Discover - Recherche avancée de contenus
+ * @param {string} mediaType - 'movie' ou 'tv'
+ * @param {Object} params - Paramètres de découverte
+ * @returns {Promise<Object>} Résultats de découverte
+ */
+async function discover(mediaType, params = {}) {
+  return tmdbRequest(`/discover/${mediaType}`, params);
+}
+
 module.exports = {
   getTrending,
   getPopularMovies,
@@ -133,5 +143,6 @@ module.exports = {
   getByGenre,
   search,
   getDetails,
-  getGenres
+  getGenres,
+  discover
 };
