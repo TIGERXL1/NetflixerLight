@@ -5,6 +5,55 @@ const authService = require('../services/authService');
 const { successResponse, errorResponse } = require('../utils/response');
 
 /**
+ * Valide la conformité d'un mot de passe selon ANSSI 2026
+ * @param {string} password - Mot de passe à valider
+ * @returns {Object} { valid: boolean, message: string }
+ */
+function validatePassword(password) {
+  if (password.length < 12) {
+    return {
+      valid: false,
+      message: 'Le mot de passe doit contenir au moins 12 caractères'
+    };
+  }
+
+  const hasUpperCase = /[A-Z]/.test(password);
+  const hasLowerCase = /[a-z]/.test(password);
+  const hasNumbers = /\d/.test(password);
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\/'`~;]/.test(password);
+
+  if (!hasUpperCase) {
+    return {
+      valid: false,
+      message: 'Le mot de passe doit contenir au moins une majuscule'
+    };
+  }
+
+  if (!hasLowerCase) {
+    return {
+      valid: false,
+      message: 'Le mot de passe doit contenir au moins une minuscule'
+    };
+  }
+
+  if (!hasNumbers) {
+    return {
+      valid: false,
+      message: 'Le mot de passe doit contenir au moins un chiffre'
+    };
+  }
+
+  if (!hasSpecialChar) {
+    return {
+      valid: false,
+      message: 'Le mot de passe doit contenir au moins un caractère spécial (!@#$%^&*...)'
+    };
+  }
+
+  return { valid: true };
+}
+
+/**
  * Inscription d'un nouvel utilisateur
  */
 async function register(req, res) {
@@ -16,13 +65,21 @@ async function register(req, res) {
       return errorResponse(res, 'Tous les champs sont requis', 400);
     }
 
-    if (password.length < 6) {
-      return errorResponse(res, 'Le mot de passe doit contenir au moins 6 caractères', 400);
+    // Validation email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return errorResponse(res, 'Format email invalide', 400);
+    }
+
+    // Validation mot de passe renforcée ANSSI 2026
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.valid) {
+      return errorResponse(res, passwordValidation.message, 400);
     }
 
     const result = await authService.register({ email, username, password });
 
-    // Stocker le token dans une session cookie (optionnel)
+    // Stocker le token dans une session cookie
     req.session.userId = result.user.id;
     req.session.token = result.token;
 
