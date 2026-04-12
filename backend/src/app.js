@@ -4,6 +4,7 @@
 const express = require('express');
 const cors = require('cors');
 const session = require('express-session');
+const helmet = require('helmet');
 const path = require('path');
 const config = require('./config');
 const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
@@ -21,6 +22,24 @@ const recommendationsRoutes = require('./routes/recommendations');
 const app = express();
 
 // ===== MIDDLEWARE =====
+
+// Helmet - Headers de sécurité HTTP
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'"],
+      imgSrc: ["'self'", "https://image.tmdb.org", "data:"],
+      connectSrc: ["'self'", "https://api.themoviedb.org"]
+    }
+  },
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
+  }
+}));
 
 // CORS
 app.use(cors(config.cors));
