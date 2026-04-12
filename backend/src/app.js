@@ -7,6 +7,7 @@ const session = require('express-session');
 const path = require('path');
 const config = require('./config');
 const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
+const { generalLimiter } = require('./middleware/rateLimiter');
 
 // Import des routes
 const authRoutes = require('./routes/auth');
@@ -50,6 +51,9 @@ app.use((req, res, next) => {
 
 const frontendPath = path.join(__dirname, '../../frontend');
 app.use(express.static(frontendPath));
+
+// Rate limiting sur toutes les routes API
+app.use('/api/', generalLimiter);
 
 // ===== ROUTES =====
 
