@@ -571,6 +571,15 @@ img {
     background: rgba(8, 15, 24, 0.88);
     color: var(--text);
     box-shadow: var(--shadow);
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+:root[data-theme="light"] .track-nav {
+    background: rgba(255, 250, 244, 0.96);
+    color: #171c24;
+    border-color: rgba(23, 28, 36, 0.16);
 }
 
 .track-nav-prev {
