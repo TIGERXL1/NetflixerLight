@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/jest --runInBand",
-    "test:watch": "./node_modules/.bin/jest --watch",
-    "test:coverage": "./node_modules/.bin/jest --coverage",
+    "test": "NODE_ENV=test ./node_modules/.bin/jest --runInBand",
+    "test:watch": "NODE_ENV=test ./node_modules/.bin/jest --watch",
+    "test:coverage": "NODE_ENV=test ./node_modules/.bin/jest --coverage",
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
