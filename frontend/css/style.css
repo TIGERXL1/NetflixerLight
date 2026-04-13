@@ -508,8 +508,10 @@ img {
     position: relative;
     z-index: 1;
     width: min(100%, 1020px);
+    max-height: calc(100vh - 2rem);
     border-radius: 28px;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     background: var(--surface-strong);
     border: 1px solid var(--border);
 }
