@@ -16,8 +16,8 @@ if (!(await redirectAuthenticated("index.html"))) {
         event.preventDefault();
         message.textContent = "";
 
-        if (passwordInput.value.length < 6) {
-            message.textContent = "Le mot de passe doit faire au moins 6 caracteres.";
+        if (passwordInput.value.length < 12) {
+            message.textContent = "Le mot de passe doit faire au moins 12 caractères.";
             return;
         }
 

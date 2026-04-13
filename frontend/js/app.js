@@ -64,6 +64,18 @@ function bindEvents() {
     });
 
     document.addEventListener("click", async (event) => {
+        const prevTrackButton = event.target.closest("[data-track-prev]");
+        if (prevTrackButton) {
+            scrollTrack(prevTrackButton.dataset.trackPrev, -1);
+            return;
+        }
+
+        const nextTrackButton = event.target.closest("[data-track-next]");
+        if (nextTrackButton) {
+            scrollTrack(nextTrackButton.dataset.trackNext, 1);
+            return;
+        }
+
         const toggleButton = event.target.closest("[data-toggle-watchlist]");
         if (toggleButton) {
             const item = findItemByKey(Number(toggleButton.dataset.id), toggleButton.dataset.mediaType);
@@ -145,7 +157,7 @@ async function loadHomeFeed() {
     if (Object.values(state.rows).some((items) => items.length > 0)) {
         hideNotice();
     } else {
-        showNotice("Le backend repond, mais aucun contenu exploitable n'a ete recupere.");
+        showNotice("Le backend répond, mais aucun contenu exploitable n'a été récupéré.");
     }
 }
 
@@ -171,8 +183,8 @@ async function handleSearch(query) {
             return;
         }
         state.searchResults = results;
-        elements.searchSummary.textContent = `${state.searchResults.length} resultat(s) pour "${trimmedQuery}"`;
-        renderTrack(elements.searchTrack, state.searchResults, "Aucun resultat pour cette recherche.");
+        elements.searchSummary.textContent = `${state.searchResults.length} résultat(s) pour "${trimmedQuery}"`;
+        renderTrack(elements.searchTrack, state.searchResults, "Aucun résultat pour cette recherche.");
     } catch (error) {
         console.error(error);
         if (requestId !== state.searchRequestId) {
@@ -220,6 +232,18 @@ async function handleWatchlistToggle(item) {
         hideNotice();
     } catch (error) {
         console.error(error);
-        showNotice(error.message || "Impossible de mettre a jour les favoris.");
+        showNotice(error.message || "Impossible de mettre à jour les favoris.");
     }
+}
+
+function scrollTrack(trackId, direction) {
+    const track = document.getElementById(trackId);
+    if (!track) {
+        return;
+    }
+
+    track.scrollBy({
+        left: direction * Math.max(track.clientWidth * 0.8, 320),
+        behavior: "smooth",
+    });
 }

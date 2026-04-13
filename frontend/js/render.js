@@ -53,13 +53,13 @@ export function renderHero(item) {
         elements.heroBackdrop.style.backgroundImage = `url("${BACKDROP_FALLBACK}")`;
         elements.heroTitle.textContent = "NetflixerLight";
         elements.heroMeta.innerHTML = "";
-        elements.heroOverview.textContent = "Explore les nouveautes, les tendances et les titres ajoutes a ta liste.";
-        elements.heroList.textContent = "Ajouter a ma liste";
+        elements.heroOverview.textContent = "Explore les nouveautés, les tendances et les titres ajoutés à ta liste.";
+        elements.heroList.textContent = "Ajouter à ma liste";
         return;
     }
 
     const meta = [
-        createPill(item.mediaType === "movie" ? "Film" : "Serie"),
+        createPill(item.mediaType === "movie" ? "Film" : "Série"),
         createPill(item.date ? item.date.slice(0, 4) : "N/A"),
         createPill(formatScore(item.voteAverage)),
     ];
@@ -72,7 +72,7 @@ export function renderHero(item) {
     elements.heroTitle.textContent = item.title;
     elements.heroMeta.innerHTML = meta.join("");
     elements.heroOverview.textContent = item.overview;
-    elements.heroList.textContent = isInWatchlist(item.id, item.mediaType) ? "Retirer de ma liste" : "Ajouter a ma liste";
+    elements.heroList.textContent = isInWatchlist(item.id, item.mediaType) ? "Retirer de ma liste" : "Ajouter à ma liste";
 }
 
 export function renderTrack(container, items, emptyMessage) {
@@ -90,10 +90,10 @@ export function renderCatalog(container, items, emptyMessage) {
 export function renderWatchlist() {
     renderTrack(elements.watchlistTrack, state.watchlist, "Ta liste est vide. Ajoute des contenus depuis les cartes ou la fiche.");
     if (state.activeDetail) {
-        elements.modalWatchlist.textContent = isInWatchlist(state.activeDetail.id, state.activeDetail.mediaType) ? "Retirer de ma liste" : "Ajouter a ma liste";
+        elements.modalWatchlist.textContent = isInWatchlist(state.activeDetail.id, state.activeDetail.mediaType) ? "Retirer de ma liste" : "Ajouter à ma liste";
     }
     if (state.featured) {
-        elements.heroList.textContent = isInWatchlist(state.featured.id, state.featured.mediaType) ? "Retirer de ma liste" : "Ajouter a ma liste";
+        elements.heroList.textContent = isInWatchlist(state.featured.id, state.featured.mediaType) ? "Retirer de ma liste" : "Ajouter à ma liste";
     }
 }
 
@@ -113,7 +113,7 @@ export function renderSearchState() {
 
 export function renderModal(detail) {
     const meta = [
-        createPill(detail.mediaType === "movie" ? "Film" : "Serie"),
+        createPill(detail.mediaType === "movie" ? "Film" : "Série"),
         createPill(detail.date ? detail.date.slice(0, 4) : "N/A"),
         createPill(formatScore(detail.voteAverage)),
     ];
@@ -125,14 +125,14 @@ export function renderModal(detail) {
 
     elements.modalHero.style.backgroundImage = `linear-gradient(90deg, rgba(4, 8, 15, 0.32), rgba(4, 8, 15, 0.08)), url("${buildBackdropUrl(detail.backdropPath)}")`;
     loadPlayer(detail, elements);
-    elements.modalKicker.textContent = detail.mediaType === "movie" ? "Fiche film" : "Fiche serie";
+    elements.modalKicker.textContent = detail.mediaType === "movie" ? "Fiche film" : "Fiche série";
     elements.modalTitle.textContent = detail.title;
     elements.modalMeta.innerHTML = meta.join("");
     elements.modalOverview.textContent = detail.overview;
     elements.modalGenres.textContent = getGenreNames(detail).join(", ") || "-";
     elements.modalLanguage.textContent = detail.originalLanguage ? detail.originalLanguage.toUpperCase() : "-";
     elements.modalPopularity.textContent = detail.popularity ? detail.popularity.toFixed(1) : "-";
-    elements.modalWatchlist.textContent = isInWatchlist(detail.id, detail.mediaType) ? "Retirer de ma liste" : "Ajouter a ma liste";
+    elements.modalWatchlist.textContent = isInWatchlist(detail.id, detail.mediaType) ? "Retirer de ma liste" : "Ajouter à ma liste";
 
     if (trailer) {
         elements.modalTrailer.textContent = "Voir la bande-annonce";
@@ -159,7 +159,7 @@ export function renderModalLoading() {
     elements.modalTrailer.classList.remove("is-hidden");
     elements.modalTrailer.textContent = "Lecture";
     elements.modalTrailer.onclick = null;
-    elements.modalWatchlist.textContent = "Ajouter a ma liste";
+    elements.modalWatchlist.textContent = "Ajouter à ma liste";
 }
 
 export function renderModalError() {
@@ -168,13 +168,13 @@ export function renderModalError() {
     elements.modalKicker.textContent = "Erreur";
     elements.modalTitle.textContent = "Impossible de charger la fiche";
     elements.modalMeta.innerHTML = "";
-    elements.modalOverview.textContent = "Une erreur est survenue pendant le chargement. Reessaie dans quelques secondes.";
+    elements.modalOverview.textContent = "Une erreur est survenue pendant le chargement. Réessaie dans quelques secondes.";
     elements.modalGenres.textContent = "-";
     elements.modalLanguage.textContent = "-";
     elements.modalPopularity.textContent = "-";
     elements.modalTrailer.classList.add("is-hidden");
     elements.modalTrailer.onclick = null;
-    elements.modalWatchlist.textContent = "Ajouter a ma liste";
+    elements.modalWatchlist.textContent = "Ajouter à ma liste";
 }
 
 function createCardMarkup(item) {
@@ -183,7 +183,9 @@ function createCardMarkup(item) {
     if (genreNames) {
         metaParts.push(genreNames);
     }
-    const toggleLabel = isInWatchlist(item.id, item.mediaType) ? "Retirer" : "Ma liste";
+    const isSaved = isInWatchlist(item.id, item.mediaType);
+    const toggleLabel = isSaved ? "✓" : "+";
+    const toggleTitle = isSaved ? "Retirer de ma liste" : "Ajouter à ma liste";
 
     return `
         <article class="media-card">
@@ -191,7 +193,7 @@ function createCardMarkup(item) {
                 <div class="card-visual">
                     <img class="card-image" src="${buildPosterUrl(item.posterPath)}" alt="${escapeHtml(`Affiche ${item.title}`)}" loading="lazy">
                     <div class="card-overlay">
-                        <span class="card-badge">${item.mediaType === "movie" ? "Film" : "Serie"}</span>
+                        <span class="card-badge">${item.mediaType === "movie" ? "Film" : "Série"}</span>
                         <span class="card-badge">${formatScore(item.voteAverage)}</span>
                     </div>
                 </div>
@@ -200,8 +202,8 @@ function createCardMarkup(item) {
                 <h3 class="card-title">${escapeHtml(item.title)}</h3>
                 <p class="card-copy">${escapeHtml(metaParts.join(" . "))}</p>
                 <div class="card-actions">
-                    <button class="ghost-button" type="button" data-open-details data-id="${item.id}" data-media-type="${item.mediaType}">Details</button>
-                    <button class="ghost-button" type="button" data-toggle-watchlist data-id="${item.id}" data-media-type="${item.mediaType}">${toggleLabel}</button>
+                    <button class="ghost-button" type="button" data-open-details data-id="${item.id}" data-media-type="${item.mediaType}">Détails</button>
+                    <button class="ghost-button watchlist-icon-button" type="button" data-toggle-watchlist data-id="${item.id}" data-media-type="${item.mediaType}" aria-label="${toggleTitle}" title="${toggleTitle}">${toggleLabel}</button>
                 </div>
             </div>
         </article>

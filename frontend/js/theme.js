@@ -34,7 +34,7 @@ export function bindThemeToggle(selector = "[data-theme-toggle]") {
 }
 
 function syncThemeToggles(theme) {
-    const label = theme === "light" ? "Theme sombre" : "Theme clair";
+    const label = theme === "light" ? "Thème sombre" : "Thème clair";
     document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
         button.textContent = label;
         button.setAttribute("aria-label", label);

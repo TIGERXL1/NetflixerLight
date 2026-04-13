@@ -77,7 +77,7 @@ export async function loadPlayer(detail, elements) {
         scheduleControlsHide();
     } catch (error) {
         console.error(error);
-        emitPlayerError("Impossible de preparer la bande-annonce.");
+        emitPlayerError("Impossible de préparer la bande-annonce.");
     }
 }
 
@@ -334,7 +334,7 @@ function syncPlayerUi() {
     currentElements.playerPlayToggle.textContent = isPlaying ? "Pause" : "Lecture";
     currentElements.playerCenterToggle.textContent = isPlaying ? "Pause" : "Lecture";
     currentElements.playerMuteToggle.textContent = isMuted ? "Activer le son" : "Couper le son";
-    currentElements.playerFullscreenToggle.textContent = document.fullscreenElement ? "Quitter plein ecran" : "Plein ecran";
+    currentElements.playerFullscreenToggle.textContent = document.fullscreenElement ? "Quitter plein écran" : "Plein écran";
     currentElements.playerProgress.value = progress;
     currentElements.playerVolume.value = youtubePlayer ? youtubePlayer.getVolume() / 100 : 1;
     currentElements.playerTime.textContent = currentTrailerKey

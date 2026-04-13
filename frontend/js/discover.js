@@ -182,21 +182,31 @@ async function loadDiscover() {
         discoverState.page = payload.page;
         discoverState.totalPages = payload.totalPages;
 
-        renderCatalog(discoverElements.grid, discoverState.items, discoverState.filters.query
-            ? "Aucun resultat ne correspond a cette recherche."
-            : "Aucun contenu ne correspond a ces filtres.");
+        renderCatalog(
+            discoverElements.grid,
+            discoverState.items,
+            discoverState.filters.query
+                ? "Aucun résultat ne correspond à cette recherche."
+                : "Aucun contenu ne correspond à ces filtres.",
+        );
         updatePagination(payload.totalResults);
         hideNotice();
     } catch (error) {
         console.error(error);
         state.discover = [];
         discoverElements.grid.innerHTML = "";
-        renderCatalog(discoverElements.grid, [], discoverState.filters.query
-            ? "Impossible de charger cette recherche."
-            : "Impossible de charger le catalogue.");
-        showNotice(discoverState.filters.query
-            ? "Impossible de charger la recherche TMDB."
-            : "Impossible de charger le catalogue TMDB.");
+        renderCatalog(
+            discoverElements.grid,
+            [],
+            discoverState.filters.query
+                ? "Impossible de charger cette recherche."
+                : "Impossible de charger le catalogue.",
+        );
+        showNotice(
+            discoverState.filters.query
+                ? "Impossible de charger la recherche TMDB."
+                : "Impossible de charger le catalogue TMDB.",
+        );
     }
 }
 
@@ -204,7 +214,7 @@ function updatePagination(totalResults) {
     const searchPrefix = discoverState.filters.query
         ? `Recherche "${discoverState.filters.query}" . `
         : "";
-    discoverElements.summary.textContent = `${searchPrefix}${totalResults} resultat(s) . Page ${discoverState.page} sur ${discoverState.totalPages}`;
+    discoverElements.summary.textContent = `${searchPrefix}${totalResults} résultat(s) . Page ${discoverState.page} sur ${discoverState.totalPages}`;
     discoverElements.pageLabel.textContent = `Page ${discoverState.page} / ${discoverState.totalPages}`;
     discoverElements.prev.disabled = discoverState.page <= 1;
     discoverElements.next.disabled = discoverState.page >= discoverState.totalPages;
@@ -232,15 +242,15 @@ async function openDetails(id, mediaType) {
 async function handleWatchlistToggle(item) {
     try {
         await toggleWatchlist(item);
-        renderCatalog(discoverElements.grid, discoverState.items, "Aucun contenu ne correspond a ces filtres.");
+        renderCatalog(discoverElements.grid, discoverState.items, "Aucun contenu ne correspond à ces filtres.");
         if (state.activeDetail) {
             elements.modalWatchlist.textContent = isInWatchlist(state.activeDetail.id, state.activeDetail.mediaType)
                 ? "Retirer de ma liste"
-                : "Ajouter a ma liste";
+                : "Ajouter à ma liste";
         }
         hideNotice();
     } catch (error) {
         console.error(error);
-        showNotice(error.message || "Impossible de mettre a jour les favoris.");
+        showNotice(error.message || "Impossible de mettre à jour les favoris.");
     }
 }

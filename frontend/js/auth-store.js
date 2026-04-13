@@ -84,6 +84,27 @@ export async function loginUser({ email, password }) {
     };
 }
 
+export async function updatePassword({ currentPassword, newPassword }) {
+    const response = await fetch(`${API_BASE_URL}/auth/change-password`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+            currentPassword,
+            newPassword,
+        }),
+    });
+    const payload = await safeJson(response);
+
+    if (!response.ok || !payload?.success) {
+        throw new Error(payload?.message || "Impossible de mettre à jour le mot de passe.");
+    }
+
+    return true;
+}
+
 async function requestAuth(path, body) {
     const response = await fetch(`${API_BASE_URL}${path}`, {
         method: "POST",

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profil | NetflixerLight</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="page-shell">
+    <header class="site-header">
+        <a class="brand" href="index.html" aria-label="Retour à l'accueil">NetflixerLight</a>
+        <nav class="site-nav" aria-label="Navigation">
+            <a href="index.html">Accueil</a>
+            <a href="discover.html">Découvrir</a>
+            <a href="index.html#watchlist-section">Ma liste</a>
+            <a href="profile.html" aria-current="page">Profil</a>
+        </nav>
+        <div class="account-bar">
+            <button class="session-button" data-theme-toggle type="button">Thème clair</button>
+            <span class="session-pill" id="session-user"></span>
+            <button class="session-button" id="logout-button" type="button">Se déconnecter</button>
+        </div>
+    </header>
+
+    <main class="page-main profile-main">
+        <section class="profile-hero">
+            <p class="eyebrow">Compte</p>
+            <h1 class="discover-title">Profil utilisateur</h1>
+            <p class="discover-copy">Gère tes informations de session et mets à jour ton mot de passe.</p>
+        </section>
+
+        <section class="notice is-hidden" id="app-notice" aria-live="polite"></section>
+
+        <section class="profile-grid">
+            <article class="profile-card">
+                <p class="section-kicker">Informations</p>
+                <h2>Détails du compte</h2>
+                <dl class="profile-details">
+                    <div>
+                        <dt>Nom</dt>
+                        <dd id="profile-name">-</dd>
+                    </div>
+                    <div>
+                        <dt>Email</dt>
+                        <dd id="profile-email">-</dd>
+                    </div>
+                </dl>
+            </article>
+
+            <article class="profile-card">
+                <p class="section-kicker">Sécurité</p>
+                <h2>Changer le mot de passe</h2>
+                <form class="profile-form" id="profile-password-form">
+                    <label class="discover-field">
+                        <span>Mot de passe actuel</span>
+                        <input id="profile-current-password" type="password" required autocomplete="current-password">
+                    </label>
+                    <label class="discover-field">
+                        <span>Nouveau mot de passe</span>
+                        <input id="profile-new-password" type="password" required autocomplete="new-password">
+                    </label>
+                    <label class="discover-field">
+                        <span>Confirmer le nouveau mot de passe</span>
+                        <input id="profile-confirm-password" type="password" required autocomplete="new-password">
+                    </label>
+                    <p class="profile-hint">Le mot de passe doit contenir au moins 12 caractères, avec majuscule, minuscule, chiffre et caractère spécial.</p>
+                    <div class="discover-actions profile-actions">
+                        <button class="primary-button" type="submit">Mettre à jour</button>
+                    </div>
+                    <p class="profile-message" id="profile-message"></p>
+                </form>
+            </article>
+        </section>
+    </main>
+</div>
+
+<script type="module" src="js/profile.js"></script>
+</body>
+</html>

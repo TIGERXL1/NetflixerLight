@@ -17,7 +17,7 @@ class User {
       try {
         const db = getDatabase();
         const sql = `INSERT INTO users (email, username, password) VALUES (?, ?, ?)`;
-        
+
         const info = db.prepare(sql).run(email, username, password);
         db.close();
 
@@ -42,7 +42,7 @@ class User {
       try {
         const db = getDatabase();
         const sql = `SELECT * FROM users WHERE email = ?`;
-        
+
         const row = db.prepare(sql).get(email);
         db.close();
 
@@ -63,7 +63,7 @@ class User {
       try {
         const db = getDatabase();
         const sql = `SELECT id, email, username, created_at FROM users WHERE id = ?`;
-        
+
         const row = db.prepare(sql).get(id);
         db.close();
 
@@ -84,7 +84,7 @@ class User {
       try {
         const db = getDatabase();
         const sql = `SELECT * FROM users WHERE username = ?`;
-        
+
         const row = db.prepare(sql).get(username);
         db.close();
 
