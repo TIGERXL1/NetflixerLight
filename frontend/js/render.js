@@ -121,7 +121,7 @@ export function renderModal(detail) {
     if (duration) {
         meta.push(createPill(duration));
     }
-    const trailer = getTrailerVideo(detail.videos);
+    const trailer = getTrailerVideo(detail.videos, detail);
 
     elements.modalHero.style.backgroundImage = `linear-gradient(90deg, rgba(4, 8, 15, 0.32), rgba(4, 8, 15, 0.08)), url("${buildBackdropUrl(detail.backdropPath)}")`;
     loadPlayer(detail, elements);

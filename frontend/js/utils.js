@@ -30,8 +30,16 @@ export function formatDuration(item) {
     return "";
 }
 
-export function getTrailerVideo(videos) {
-    return (videos || []).find((video) => video.site === "YouTube" && (video.type === "Trailer" || video.type === "Teaser")) || null;
+export function getTrailerVideo(videos, item = null) {
+    const candidates = (videos || [])
+        .filter((video) => video.site === "YouTube" && (video.type === "Trailer" || video.type === "Teaser"))
+        .map((video) => ({
+            video,
+            score: scoreTrailerVideo(video, item),
+        }))
+        .sort((left, right) => right.score - left.score);
+
+    return candidates[0]?.video || null;
 }
 
 export function createPill(label) {
@@ -97,4 +105,62 @@ export function normalizeResults(results, limit) {
 export function pickFeatured(items) {
     const candidates = items.filter((item) => item.backdropPath);
     return candidates[Math.floor(Math.random() * candidates.length)] || items[0] || null;
+}
+
+function scoreTrailerVideo(video, item) {
+    let score = 0;
+    const normalizedName = normalizeText(video.name || "");
+    const title = normalizeText(item?.title || "");
+
+    if (video.type === "Trailer") {
+        score += 10;
+    }
+
+    if (video.type === "Teaser") {
+        score += 4;
+    }
+
+    if (video.official) {
+        score += 8;
+    }
+
+    if (video.iso_639_1 === "fr") {
+        score += 6;
+    } else if (video.iso_639_1 === "en") {
+        score += 4;
+    }
+
+    if (normalizedName.includes("official")) {
+        score += 4;
+    }
+
+    if (normalizedName.includes("trailer")) {
+        score += 4;
+    }
+
+    if (normalizedName.includes("bande annonce") || normalizedName.includes("bande-annonce")) {
+        score += 4;
+    }
+
+    if (normalizedName.includes("vf")) {
+        score += 3;
+    }
+
+    if (normalizedName.includes("vo")) {
+        score += 1;
+    }
+
+    if (title && normalizedName.includes(title)) {
+        score += 5;
+    }
+
+    return score;
+}
+
+function normalizeText(value) {
+    return String(value)
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .trim();
 }

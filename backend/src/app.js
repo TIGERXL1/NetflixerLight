@@ -29,10 +29,16 @@ app.use(helmet({
     directives: {
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'"],
-      imgSrc: ["'self'", "https://image.tmdb.org", "data:"],
-      connectSrc: ["'self'", "https://api.themoviedb.org"]
+      scriptSrc: ["'self'", "https://www.youtube.com", "https://www.youtube-nocookie.com", "https://s.ytimg.com"],
+      imgSrc: ["'self'", "https://image.tmdb.org", "https://i.ytimg.com", "https://img.youtube.com", "https://s.ytimg.com", "data:"],
+      connectSrc: ["'self'", "https://api.themoviedb.org", "https://www.youtube.com", "https://www.youtube-nocookie.com", "https://s.ytimg.com"],
+      frameSrc: ["'self'", "https://www.youtube.com", "https://www.youtube-nocookie.com", "https://www.youtube.com/embed/", "https://www.youtube-nocookie.com/embed/"],
+      mediaSrc: ["'self'", "https://www.youtube.com", "https://www.youtube-nocookie.com", "https://*.googlevideo.com"],
+      childSrc: ["'self'", "https://www.youtube.com", "https://www.youtube-nocookie.com"]
     }
+  },
+  referrerPolicy: {
+    policy: 'strict-origin-when-cross-origin'
   },
   hsts: {
     maxAge: 31536000,
