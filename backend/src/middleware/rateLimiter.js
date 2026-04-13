@@ -3,11 +3,14 @@
 
 const rateLimit = require('express-rate-limit');
 
+// Désactiver le rate limiting en mode test
+const isTestEnv = process.env.NODE_ENV === 'test';
+
 // Rate limiter général pour toutes les routes API
-// 500 requêtes par tranche de 15 minutes
+// 500 requêtes par tranche de 15 minutes (désactivé en test)
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 500, // 500 requêtes maximum
+  max: isTestEnv ? 10000 : 500, // Limite très élevée en test
   message: {
     success: false,
     message: 'Trop de requêtes depuis cette adresse IP, veuillez réessayer dans 15 minutes'
@@ -17,10 +20,10 @@ const generalLimiter = rateLimit({
 });
 
 // Rate limiter strict pour les routes d'authentification
-// 5 tentatives par tranche de 10 minutes
+// 5 tentatives par tranche de 10 minutes (désactivé en test)
 const authLimiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 10 minutes
-  max: 5, // 5 tentatives maximum
+  max: isTestEnv ? 10000 : 5, // Limite très élevée en test
   message: {
     success: false,
     message: 'Trop de tentatives de connexion, veuillez réessayer dans 10 minutes'

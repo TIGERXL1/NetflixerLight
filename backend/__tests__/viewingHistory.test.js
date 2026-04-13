@@ -9,7 +9,7 @@ const { initializeDatabase, closeDatabase, clearDatabase } = require('../src/con
 let testUser = {
   email: 'test@netflixlight.com',
   username: 'testuser',
-  password: 'password123'
+  password: 'TestPassword123!@#'
 };
 
 let authCookie;

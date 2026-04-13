@@ -18,7 +18,7 @@ describe('GET /api/recommendations', () => {
       .send({
         username: 'testuser',
         email: 'test@test.com',
-        password: 'password123'
+        password: 'TestPassword123!@#'
       });
 
     userId = registerRes.body.data.user.id;
@@ -27,7 +27,7 @@ describe('GET /api/recommendations', () => {
       .post('/api/auth/login')
       .send({
         email: 'test@test.com',
-        password: 'password123'
+        password: 'TestPassword123!@#'
       });
 
     authToken = loginRes.body.data.token;
@@ -188,14 +188,14 @@ describe('GET /api/recommendations', () => {
         .send({
           username: 'user2',
           email: 'user2@test.com',
-          password: 'password123'
+          password: 'TestPassword123!@#'
         });
 
       const login2Res = await request(app)
         .post('/api/auth/login')
         .send({
           email: 'user2@test.com',
-          password: 'password123'
+          password: 'TestPassword123!@#'
         });
 
       const authToken2 = login2Res.body.data.token;

@@ -9,7 +9,7 @@ const { initializeDatabase, closeDatabase, clearDatabase } = require('../src/con
 let testUser = {
   email: 'test@netflixlight.com',
   username: 'testuser',
-  password: 'password123'
+  password: 'TestPassword123!@#' // Conforme ANSSI 2026: 12+ chars, maj, min, chiffre, spécial
 };
 
 // Setup : Initialiser la base de données avant tous les tests
@@ -79,7 +79,7 @@ describe('POST /api/auth/register', () => {
       .send({
         email: 'autre@netflixlight.com',
         username: testUser.username,
-        password: 'password456'
+        password: 'ValidPassword456!@#' // Conforme ANSSI 2026
       })
       .expect('Content-Type', /json/)
       .expect(400);
@@ -94,13 +94,13 @@ describe('POST /api/auth/register', () => {
       .send({
         email: testUser.email,
         username: testUser.username,
-        password: '12345' // Moins de 6 caractères
+        password: 'Short1!' // Moins de 12 caractères
       })
       .expect('Content-Type', /json/)
       .expect(400);
 
     expect(response.body.success).toBe(false);
-    expect(response.body.message).toContain('6 caractères');
+    expect(response.body.message).toContain('12 caractères');
   });
 
   test('Devrait échouer si des champs sont manquants', async () => {

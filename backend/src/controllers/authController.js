@@ -79,11 +79,26 @@ async function register(req, res) {
 
     const result = await authService.register({ email, username, password });
 
-    // Stocker le token dans une session cookie
-    req.session.userId = result.user.id;
-    req.session.token = result.token;
+    // Régénérer le session ID (protection session fixation)
+    req.session.regenerate((err) => {
+      if (err) {
+        console.error('Erreur régénération session:', err);
+        return errorResponse(res, 'Erreur lors de l\'inscription', 500);
+      }
 
-    return successResponse(res, 'Inscription réussie', result, 201);
+      // Stocker dans la nouvelle session
+      req.session.userId = result.user.id;
+      req.session.token = result.token;
+
+      // Sauvegarder explicitement la session
+      req.session.save((saveErr) => {
+        if (saveErr) {
+          console.error('Erreur sauvegarde session:', saveErr);
+          return errorResponse(res, 'Erreur lors de l\'inscription', 500);
+        }
+        successResponse(res, 'Inscription réussie', result, 201);
+      });
+    });
   } catch (error) {
     return errorResponse(res, error.message, 400);
   }
@@ -103,11 +118,26 @@ async function login(req, res) {
 
     const result = await authService.login(email, password);
 
-    // Stocker dans la session
-    req.session.userId = result.user.id;
-    req.session.token = result.token;
+    // Régénérer le session ID (protection session fixation)
+    req.session.regenerate((err) => {
+      if (err) {
+        console.error('Erreur régénération session:', err);
+        return errorResponse(res, 'Erreur lors de la connexion', 500);
+      }
 
-    return successResponse(res, 'Connexion réussie', result);
+      // Stocker dans la nouvelle session
+      req.session.userId = result.user.id;
+      req.session.token = result.token;
+
+      // Sauvegarder explicitement la session
+      req.session.save((saveErr) => {
+        if (saveErr) {
+          console.error('Erreur sauvegarde session:', saveErr);
+          return errorResponse(res, 'Erreur lors de la connexion', 500);
+        }
+        successResponse(res, 'Connexion réussie', result);
+      });
+    });
   } catch (error) {
     return errorResponse(res, error.message, 401);
   }

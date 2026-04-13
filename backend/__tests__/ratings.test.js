@@ -9,7 +9,7 @@ const { initializeDatabase, closeDatabase, clearDatabase } = require('../src/con
 let testUser = {
   email: 'test@netflixlight.com',
   username: 'testuser',
-  password: 'password123'
+  password: 'TestPassword123!@#' // Conforme ANSSI 2026
 };
 
 let authCookie;
@@ -280,14 +280,14 @@ describe('GET /api/ratings', () => {
       .send({
         email: 'user2@test.com',
         username: 'user2',
-        password: 'password123'
+        password: 'TestPassword123!@#'
       });
 
     const user2Login = await request(app)
       .post('/api/auth/login')
       .send({
         email: 'user2@test.com',
-        password: 'password123'
+        password: 'TestPassword123!@#'
       });
 
     const user2Cookie = user2Login.headers['set-cookie'];
