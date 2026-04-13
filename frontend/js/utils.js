@@ -30,9 +30,8 @@ export function formatDuration(item) {
     return "";
 }
 
-export function getTrailerUrl(videos) {
-    const trailer = (videos || []).find((video) => video.site === "YouTube" && (video.type === "Trailer" || video.type === "Teaser"));
-    return trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : "";
+export function getTrailerVideo(videos) {
+    return (videos || []).find((video) => video.site === "YouTube" && (video.type === "Trailer" || video.type === "Teaser")) || null;
 }
 
 export function createPill(label) {
@@ -98,25 +97,4 @@ export function normalizeResults(results, limit) {
 export function pickFeatured(items) {
     const candidates = items.filter((item) => item.backdropPath);
     return candidates[Math.floor(Math.random() * candidates.length)] || items[0] || null;
-}
-
-export function toStoredItem(item) {
-    return {
-        id: item.id,
-        mediaType: item.mediaType,
-        title: item.title,
-        overview: item.overview,
-        poster_path: item.posterPath,
-        backdrop_path: item.backdropPath,
-        vote_average: item.voteAverage,
-        popularity: item.popularity,
-        release_date: item.mediaType === "movie" ? item.date : undefined,
-        first_air_date: item.mediaType === "tv" ? item.date : undefined,
-        genre_ids: item.genreIds,
-        genres: item.genres,
-        original_language: item.originalLanguage,
-        runtime: item.runtime,
-        episode_run_time: item.episodeRuntime,
-        number_of_seasons: item.seasons,
-    };
 }

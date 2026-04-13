@@ -1,6 +1,6 @@
 import { redirectAuthenticated, registerUser } from "./auth-store.js";
 
-if (!redirectAuthenticated("index.html")) {
+if (!(await redirectAuthenticated("index.html"))) {
     const form = document.getElementById("signup-form");
     const nameInput = document.getElementById("signup-name");
     const emailInput = document.getElementById("signup-email");
@@ -8,7 +8,7 @@ if (!redirectAuthenticated("index.html")) {
     const confirmInput = document.getElementById("signup-confirm");
     const message = document.getElementById("signup-message");
 
-    form.addEventListener("submit", (event) => {
+    form.addEventListener("submit", async (event) => {
         event.preventDefault();
         message.textContent = "";
 
@@ -23,7 +23,7 @@ if (!redirectAuthenticated("index.html")) {
         }
 
         try {
-            registerUser({
+            await registerUser({
                 name: nameInput.value,
                 email: emailInput.value,
                 password: passwordInput.value,

@@ -1,18 +1,34 @@
-const USERS_STORAGE_KEY = "netflixerlight_users";
-const SESSION_STORAGE_KEY = "netflixerlight_session";
+import { API_BASE_URL } from "./config.js";
 
-export function getCurrentUser() {
+export async function getCurrentUser() {
     try {
-        const rawValue = localStorage.getItem(SESSION_STORAGE_KEY);
-        return rawValue ? JSON.parse(rawValue) : null;
+        const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+            credentials: "include",
+        });
+        const payload = await safeJson(response);
+
+        if (!response.ok || !payload?.success) {
+            return null;
+        }
+
+        const user = payload.data?.user;
+        if (!user) {
+            return null;
+        }
+
+        return {
+            id: user.id,
+            name: user.username,
+            email: user.email,
+        };
     } catch (error) {
         console.error(error);
         return null;
     }
 }
 
-export function requireAuth(redirectPath = "login.html") {
-    const user = getCurrentUser();
+export async function requireAuth(redirectPath = "login.html") {
+    const user = await getCurrentUser();
     if (!user) {
         window.location.replace(redirectPath);
         return null;
@@ -20,8 +36,8 @@ export function requireAuth(redirectPath = "login.html") {
     return user;
 }
 
-export function redirectAuthenticated(targetPath = "index.html") {
-    const user = getCurrentUser();
+export async function redirectAuthenticated(targetPath = "index.html") {
+    const user = await getCurrentUser();
     if (user) {
         window.location.replace(targetPath);
         return true;
@@ -29,66 +45,68 @@ export function redirectAuthenticated(targetPath = "index.html") {
     return false;
 }
 
-export function logoutUser() {
-    localStorage.removeItem(SESSION_STORAGE_KEY);
+export async function logoutUser() {
+    const response = await fetch(`${API_BASE_URL}/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+    });
+    const payload = await safeJson(response);
+
+    if (!response.ok || !payload?.success) {
+        throw new Error(payload?.message || "Impossible de se deconnecter.");
+    }
 }
 
-export function registerUser({ name, email, password }) {
-    const users = getUsers();
-    const normalizedEmail = email.trim().toLowerCase();
-
-    if (users.some((user) => user.email === normalizedEmail)) {
-        throw new Error("Un compte existe deja avec cet email.");
-    }
-
-    const newUser = {
-        id: globalThis.crypto?.randomUUID?.() || String(Date.now()),
-        name: name.trim(),
-        email: normalizedEmail,
+export async function registerUser({ name, email, password }) {
+    const payload = await requestAuth("/auth/register", {
+        email: email.trim().toLowerCase(),
+        username: name.trim(),
         password,
-    };
+    });
 
-    users.push(newUser);
-    saveUsers(users);
-    setCurrentUser(newUser);
-    return sanitizeUser(newUser);
+    return {
+        id: payload.data.user.id,
+        name: payload.data.user.username,
+        email: payload.data.user.email,
+    };
 }
 
-export function loginUser({ email, password }) {
-    const normalizedEmail = email.trim().toLowerCase();
-    const user = getUsers().find((entry) => entry.email === normalizedEmail && entry.password === password);
+export async function loginUser({ email, password }) {
+    const payload = await requestAuth("/auth/login", {
+        email: email.trim().toLowerCase(),
+        password,
+    });
 
-    if (!user) {
-        throw new Error("Email ou mot de passe invalide.");
+    return {
+        id: payload.data.user.id,
+        name: payload.data.user.username,
+        email: payload.data.user.email,
+    };
+}
+
+async function requestAuth(path, body) {
+    const response = await fetch(`${API_BASE_URL}${path}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(body),
+    });
+    const payload = await safeJson(response);
+
+    if (!response.ok || !payload?.success) {
+        throw new Error(payload?.message || "Erreur d'authentification.");
     }
 
-    setCurrentUser(user);
-    return sanitizeUser(user);
+    return payload;
 }
 
-function getUsers() {
+async function safeJson(response) {
     try {
-        const rawValue = localStorage.getItem(USERS_STORAGE_KEY);
-        const parsed = rawValue ? JSON.parse(rawValue) : [];
-        return Array.isArray(parsed) ? parsed : [];
+        return await response.json();
     } catch (error) {
         console.error(error);
-        return [];
+        return null;
     }
-}
-
-function saveUsers(users) {
-    localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
-}
-
-function setCurrentUser(user) {
-    localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(sanitizeUser(user)));
-}
-
-function sanitizeUser(user) {
-    return {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-    };
 }

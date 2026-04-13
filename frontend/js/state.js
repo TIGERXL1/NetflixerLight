@@ -1,10 +1,11 @@
-import { WATCHLIST_STORAGE_KEY } from "./config.js";
-import { getItemKey, normalizeItem, toStoredItem } from "./utils.js";
+import { addFavorite, fetchFavorites, removeFavorite } from "./favorites-api.js";
+import { getItemKey, normalizeItem } from "./utils.js";
 
 export const state = {
     featured: null,
     activeDetail: null,
-    watchlist: loadWatchlist(),
+    watchlist: [],
+    discover: [],
     rows: { trending: [], movies: [], top: [], series: [] },
     searchResults: [],
     searchRequestId: 0,
@@ -12,48 +13,49 @@ export const state = {
     genreLookup: { movie: new Map(), tv: new Map() },
 };
 
-export function loadWatchlist() {
+export async function loadWatchlist() {
     try {
-        const rawValue = localStorage.getItem(WATCHLIST_STORAGE_KEY);
-        if (!rawValue) {
-            return [];
-        }
-        const parsed = JSON.parse(rawValue);
-        if (!Array.isArray(parsed)) {
-            return [];
-        }
-        return parsed
-            .map((item) => normalizeItem({ ...item, media_type: item.mediaType || item.media_type }))
-            .filter(Boolean);
+        state.watchlist = await fetchFavorites();
     } catch (error) {
         console.error(error);
-        return [];
+        state.watchlist = [];
     }
-}
-
-export function saveWatchlist() {
-    try {
-        localStorage.setItem(WATCHLIST_STORAGE_KEY, JSON.stringify(state.watchlist.map(toStoredItem)));
-    } catch (error) {
-        console.error(error);
-    }
+    return state.watchlist;
 }
 
 export function isInWatchlist(id, mediaType) {
     return state.watchlist.some((item) => item.id === id && item.mediaType === mediaType);
 }
 
-export function toggleWatchlist(item) {
+export async function toggleWatchlist(item) {
     const itemKey = getItemKey(item.id, item.mediaType);
     const exists = state.watchlist.some((entry) => getItemKey(entry.id, entry.mediaType) === itemKey);
 
     if (exists) {
+        await removeFavorite(item.id, item.mediaType);
         state.watchlist = state.watchlist.filter((entry) => getItemKey(entry.id, entry.mediaType) !== itemKey);
     } else {
-        state.watchlist = [normalizeItem({ ...toStoredItem(item), media_type: item.mediaType }), ...state.watchlist];
+        await addFavorite(item.id, item.mediaType);
+        state.watchlist = [normalizeItem({
+            id: item.id,
+            media_type: item.mediaType,
+            title: item.mediaType === "movie" ? item.title : undefined,
+            name: item.mediaType === "tv" ? item.title : undefined,
+            overview: item.overview,
+            poster_path: item.posterPath,
+            backdrop_path: item.backdropPath,
+            vote_average: item.voteAverage,
+            popularity: item.popularity,
+            release_date: item.mediaType === "movie" ? item.date : undefined,
+            first_air_date: item.mediaType === "tv" ? item.date : undefined,
+            genre_ids: item.genreIds,
+            genres: item.genres,
+            original_language: item.originalLanguage,
+            runtime: item.runtime,
+            episode_run_time: item.episodeRuntime,
+            number_of_seasons: item.seasons,
+        }), ...state.watchlist];
     }
-
-    saveWatchlist();
 }
 
 export function hydrateGenreLookup(result, mediaType) {
@@ -75,6 +77,7 @@ export function findItemByKey(id, mediaType) {
     const collections = [
         state.featured ? [state.featured] : [],
         state.watchlist,
+        state.discover,
         state.searchResults,
         state.rows.trending,
         state.rows.movies,

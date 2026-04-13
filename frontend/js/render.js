@@ -9,8 +9,13 @@ import {
     escapeHtml,
     formatDuration,
     formatScore,
-    getTrailerUrl,
+    getTrailerVideo,
 } from "./utils.js";
+import { loadPlayer, setPlayerErrorHandler, startPlayer, stopPlayer } from "./player.js";
+
+setPlayerErrorHandler((message) => {
+    showNotice(message);
+});
 
 export function showNotice(message) {
     elements.appNotice.textContent = message;
@@ -29,6 +34,7 @@ export function openModal() {
 }
 
 export function closeModal() {
+    stopPlayer();
     elements.modal.classList.add("is-hidden");
     elements.modal.setAttribute("aria-hidden", "true");
     document.body.classList.remove("modal-open");
@@ -47,7 +53,7 @@ export function renderHero(item) {
         elements.heroBackdrop.style.backgroundImage = `url("${BACKDROP_FALLBACK}")`;
         elements.heroTitle.textContent = "NetflixerLight";
         elements.heroMeta.innerHTML = "";
-        elements.heroOverview.textContent = "Le front est pret, mais aucun contenu n'a ete charge.";
+        elements.heroOverview.textContent = "Explore les nouveautes, les tendances et les titres ajoutes a ta liste.";
         elements.heroList.textContent = "Ajouter a ma liste";
         return;
     }
@@ -75,6 +81,10 @@ export function renderTrack(container, items, emptyMessage) {
         return;
     }
     container.innerHTML = items.map(createCardMarkup).join("");
+}
+
+export function renderCatalog(container, items, emptyMessage) {
+    renderTrack(container, items, emptyMessage);
 }
 
 export function renderWatchlist() {
@@ -111,9 +121,10 @@ export function renderModal(detail) {
     if (duration) {
         meta.push(createPill(duration));
     }
+    const trailer = getTrailerVideo(detail.videos);
 
-    const trailerUrl = getTrailerUrl(detail.videos);
     elements.modalHero.style.backgroundImage = `linear-gradient(90deg, rgba(4, 8, 15, 0.32), rgba(4, 8, 15, 0.08)), url("${buildBackdropUrl(detail.backdropPath)}")`;
+    loadPlayer(detail, elements);
     elements.modalKicker.textContent = detail.mediaType === "movie" ? "Fiche film" : "Fiche serie";
     elements.modalTitle.textContent = detail.title;
     elements.modalMeta.innerHTML = meta.join("");
@@ -123,38 +134,46 @@ export function renderModal(detail) {
     elements.modalPopularity.textContent = detail.popularity ? detail.popularity.toFixed(1) : "-";
     elements.modalWatchlist.textContent = isInWatchlist(detail.id, detail.mediaType) ? "Retirer de ma liste" : "Ajouter a ma liste";
 
-    if (trailerUrl) {
-        elements.modalTrailer.href = trailerUrl;
+    if (trailer) {
+        elements.modalTrailer.textContent = "Voir la bande-annonce";
         elements.modalTrailer.classList.remove("is-hidden");
+        elements.modalTrailer.onclick = () => {
+            startPlayer();
+        };
     } else {
-        elements.modalTrailer.href = "#";
         elements.modalTrailer.classList.add("is-hidden");
+        elements.modalTrailer.onclick = null;
     }
 }
 
 export function renderModalLoading() {
+    stopPlayer();
     elements.modalHero.style.backgroundImage = `url("${BACKDROP_FALLBACK}")`;
-    elements.modalKicker.textContent = "Chargement";
-    elements.modalTitle.textContent = "Recuperation des details...";
-    elements.modalMeta.innerHTML = createPill("TMDB");
-    elements.modalOverview.textContent = "La fiche detaillee est en cours de chargement.";
+    elements.modalKicker.textContent = "Veuillez patienter";
+    elements.modalTitle.textContent = "Chargement des informations";
+    elements.modalMeta.innerHTML = "";
+    elements.modalOverview.textContent = "Les informations du programme sont en cours de chargement.";
     elements.modalGenres.textContent = "-";
     elements.modalLanguage.textContent = "-";
     elements.modalPopularity.textContent = "-";
-    elements.modalTrailer.classList.add("is-hidden");
+    elements.modalTrailer.classList.remove("is-hidden");
+    elements.modalTrailer.textContent = "Lecture";
+    elements.modalTrailer.onclick = null;
     elements.modalWatchlist.textContent = "Ajouter a ma liste";
 }
 
 export function renderModalError() {
+    stopPlayer();
     elements.modalHero.style.backgroundImage = `url("${BACKDROP_FALLBACK}")`;
     elements.modalKicker.textContent = "Erreur";
     elements.modalTitle.textContent = "Impossible de charger la fiche";
-    elements.modalMeta.innerHTML = createPill("TMDB");
-    elements.modalOverview.textContent = "La requete detaillee a echoue. Reessaie dans quelques secondes.";
+    elements.modalMeta.innerHTML = "";
+    elements.modalOverview.textContent = "Une erreur est survenue pendant le chargement. Reessaie dans quelques secondes.";
     elements.modalGenres.textContent = "-";
     elements.modalLanguage.textContent = "-";
     elements.modalPopularity.textContent = "-";
     elements.modalTrailer.classList.add("is-hidden");
+    elements.modalTrailer.onclick = null;
     elements.modalWatchlist.textContent = "Ajouter a ma liste";
 }
 

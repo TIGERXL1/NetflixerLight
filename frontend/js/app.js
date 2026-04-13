@@ -19,28 +19,35 @@ import {
 import {
     findItemByKey,
     hydrateGenreLookup,
+    loadWatchlist,
     state,
     toggleWatchlist,
 } from "./state.js";
 import { createSkeletonCards, normalizeResults, pickFeatured } from "./utils.js";
 
-const currentUser = requireAuth("login.html");
+bootstrap();
 
-if (currentUser) {
-    initApp(currentUser);
+async function bootstrap() {
+    const currentUser = await requireAuth("login.html");
+    if (!currentUser) {
+        return;
+    }
+
+    await initApp(currentUser);
 }
 
 async function initApp(currentUserData) {
     elements.sessionUser.textContent = currentUserData.name || currentUserData.email || "Compte";
     bindEvents();
     renderLoadingTracks();
+    await loadWatchlist();
     renderWatchlist();
 
     try {
         await loadHomeFeed();
     } catch (error) {
         console.error(error);
-        showNotice("Impossible de charger TMDB pour le moment. Verifie la connexion ou la cle API.");
+        showNotice("Impossible de charger le backend ou TMDB pour le moment.");
     }
 }
 
@@ -57,11 +64,7 @@ function bindEvents() {
         if (toggleButton) {
             const item = findItemByKey(Number(toggleButton.dataset.id), toggleButton.dataset.mediaType);
             if (item) {
-                toggleWatchlist(item);
-                renderHero(state.featured);
-                renderWatchlist();
-                renderAllRows();
-                renderSearchState();
+                await handleWatchlistToggle(item);
             }
             return;
         }
@@ -89,29 +92,24 @@ function bindEvents() {
         }
     });
 
-    elements.heroList.addEventListener("click", () => {
+    elements.heroList.addEventListener("click", async () => {
         if (state.featured) {
-            toggleWatchlist(state.featured);
-            renderHero(state.featured);
-            renderWatchlist();
-            renderAllRows();
-            renderSearchState();
+            await handleWatchlistToggle(state.featured);
         }
     });
 
-    elements.modalWatchlist.addEventListener("click", () => {
+    elements.modalWatchlist.addEventListener("click", async () => {
         if (state.activeDetail) {
-            toggleWatchlist(state.activeDetail);
-            renderHero(state.featured);
-            renderWatchlist();
-            renderAllRows();
-            renderSearchState();
+            await handleWatchlistToggle(state.activeDetail);
         }
     });
 
-    elements.logoutButton.addEventListener("click", () => {
-        logoutUser();
-        window.location.replace("login.html");
+    elements.logoutButton.addEventListener("click", async () => {
+        try {
+            await logoutUser();
+        } finally {
+            window.location.replace("login.html");
+        }
     });
 }
 
@@ -143,7 +141,7 @@ async function loadHomeFeed() {
     if (Object.values(state.rows).some((items) => items.length > 0)) {
         hideNotice();
     } else {
-        showNotice("TMDB repond, mais aucun contenu exploitable n'a ete recupere.");
+        showNotice("Le backend repond, mais aucun contenu exploitable n'a ete recupere.");
     }
 }
 
@@ -206,4 +204,18 @@ function pickMediaItems(result, limit) {
         return [];
     }
     return normalizeResults(result.value.results, limit);
+}
+
+async function handleWatchlistToggle(item) {
+    try {
+        await toggleWatchlist(item);
+        renderHero(state.featured);
+        renderWatchlist();
+        renderAllRows();
+        renderSearchState();
+        hideNotice();
+    } catch (error) {
+        console.error(error);
+        showNotice(error.message || "Impossible de mettre a jour les favoris.");
+    }
 }

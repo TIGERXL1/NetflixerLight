@@ -3,112 +3,84 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NetflixerLight</title>
+<title>Decouvrir | NetflixerLight</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <div class="page-shell">
     <header class="site-header">
-        <a class="brand" href="#top" aria-label="Retour en haut">NetflixerLight</a>
+        <a class="brand" href="index.html" aria-label="Retour a l'accueil">NetflixerLight</a>
         <nav class="site-nav" aria-label="Navigation">
-            <a href="discover.html">Decouvrir</a>
-            <a href="#trending-section">Tendances</a>
-            <a href="#movies-section">Films</a>
-            <a href="#series-section">Series</a>
-            <a href="#watchlist-section">Ma liste</a>
+            <a href="index.html">Accueil</a>
+            <a href="discover.html" aria-current="page">Decouvrir</a>
+            <a href="index.html#watchlist-section">Ma liste</a>
         </nav>
         <div class="account-bar">
             <span class="session-pill" id="session-user"></span>
             <button class="session-button" id="logout-button" type="button">Se deconnecter</button>
         </div>
-        <label class="search-field" for="search-input">
-            <span class="search-label">Recherche</span>
-            <input id="search-input" type="search" placeholder="Chercher un film ou une serie" autocomplete="off">
-        </label>
     </header>
 
-    <main class="page-main" id="top">
-        <section class="hero" id="hero">
-            <div class="hero-backdrop" id="hero-backdrop"></div>
-            <div class="hero-gradient"></div>
-            <div class="hero-body">
-                <p class="eyebrow">Selection du moment</p>
-                <h1 class="hero-title" id="hero-title">Chargement...</h1>
-                <div class="hero-meta" id="hero-meta"></div>
-                <p class="hero-overview" id="hero-overview">Decouvre les films et series les plus regardes du moment.</p>
-                <div class="hero-actions">
-                    <button class="primary-button" id="hero-play" type="button">Voir la fiche</button>
-                    <button class="secondary-button" id="hero-list" type="button">Ajouter a ma liste</button>
-                </div>
+    <main class="page-main discover-main">
+        <section class="discover-hero">
+            <div>
+                <p class="eyebrow">Catalogue</p>
+                <h1 class="discover-title">Decouvrir les films et series</h1>
+                <p class="discover-copy">Explore le catalogue TMDB avec des filtres par type, note minimale et date de sortie.</p>
             </div>
         </section>
 
         <section class="notice is-hidden" id="app-notice" aria-live="polite"></section>
 
-        <section class="media-section is-hidden" id="search-section">
-            <div class="section-header">
-                <div>
-                    <p class="section-kicker">Recherche</p>
-                    <h2>Resultats</h2>
+        <section class="media-section discover-filters-section">
+            <form class="discover-filters" id="discover-filters">
+                <label class="discover-field">
+                    <span>Type</span>
+                    <select id="discover-type">
+                        <option value="all">Films et series</option>
+                        <option value="movie">Films</option>
+                        <option value="tv">Series</option>
+                    </select>
+                </label>
+                <label class="discover-field">
+                    <span>Note minimale</span>
+                    <select id="discover-rating">
+                        <option value="">Toutes</option>
+                        <option value="5">5+</option>
+                        <option value="6">6+</option>
+                        <option value="7">7+</option>
+                        <option value="8">8+</option>
+                    </select>
+                </label>
+                <label class="discover-field">
+                    <span>Date min</span>
+                    <input id="discover-date-from" type="date">
+                </label>
+                <label class="discover-field">
+                    <span>Date max</span>
+                    <input id="discover-date-to" type="date">
+                </label>
+                <div class="discover-actions">
+                    <button class="primary-button" type="submit">Appliquer</button>
+                    <button class="ghost-button" id="discover-reset" type="button">Reinitialiser</button>
                 </div>
-                <p class="section-copy" id="search-summary"></p>
-            </div>
-            <div class="media-track" id="search-track"></div>
+            </form>
         </section>
 
-        <section class="media-section" id="watchlist-section">
+        <section class="media-section">
             <div class="section-header">
                 <div>
-                    <p class="section-kicker">Personnel</p>
-                    <h2>Ma liste</h2>
+                    <p class="section-kicker">Resultats</p>
+                    <h2>Catalogue</h2>
                 </div>
-                <p class="section-copy">Retrouve ici les contenus que tu as ajoutes a ta liste.</p>
+                <p class="section-copy" id="discover-summary"></p>
             </div>
-            <div class="media-track" id="watchlist-track"></div>
-        </section>
-
-        <section class="media-section" id="trending-section">
-            <div class="section-header">
-                <div>
-                    <p class="section-kicker">Cette semaine</p>
-                    <h2>Tendances</h2>
-                </div>
-                <p class="section-copy">Les films et series qui ressortent maintenant.</p>
+            <div class="discover-grid" id="discover-grid"></div>
+            <div class="discover-pagination">
+                <button class="ghost-button" id="discover-prev" type="button">Page precedente</button>
+                <span class="discover-page-label" id="discover-page-label">Page 1</span>
+                <button class="ghost-button" id="discover-next" type="button">Page suivante</button>
             </div>
-            <div class="media-track" id="trending-track"></div>
-        </section>
-
-        <section class="media-section" id="movies-section">
-            <div class="section-header">
-                <div>
-                    <p class="section-kicker">Cinema</p>
-                    <h2>Films populaires</h2>
-                </div>
-                <p class="section-copy">Les films les plus consultes du moment.</p>
-            </div>
-            <div class="media-track" id="movies-track"></div>
-        </section>
-
-        <section class="media-section" id="top-section">
-            <div class="section-header">
-                <div>
-                    <p class="section-kicker">Selection</p>
-                    <h2>Top notes</h2>
-                </div>
-                <p class="section-copy">Les films qui sortent le plus du lot.</p>
-            </div>
-            <div class="media-track" id="top-track"></div>
-        </section>
-
-        <section class="media-section" id="series-section">
-            <div class="section-header">
-                <div>
-                    <p class="section-kicker">Streaming</p>
-                    <h2>Series populaires</h2>
-                </div>
-                <p class="section-copy">Les series a forte traction en ce moment.</p>
-            </div>
-            <div class="media-track" id="series-track"></div>
         </section>
     </main>
 </div>
@@ -173,6 +145,6 @@
     </div>
 </div>
 
-<script type="module" src="js/app.js"></script>
+<script type="module" src="js/discover.js"></script>
 </body>
 </html>
