@@ -1,4 +1,4 @@
-import { fetchDetails, fetchDiscoverFeed, fetchGenreLookups } from "./api.js";
+import { fetchDetails, fetchDiscoverFeed, fetchDiscoverSearchFeed, fetchGenreLookups } from "./api.js";
 import { logoutUser, requireAuth } from "./auth-store.js";
 import { elements } from "./dom.js";
 import {
@@ -19,10 +19,12 @@ import {
     state,
     toggleWatchlist,
 } from "./state.js";
+import { bindThemeToggle, initTheme } from "./theme.js";
 import { createSkeletonCards } from "./utils.js";
 
 const discoverElements = {
     filters: document.getElementById("discover-filters"),
+    query: document.getElementById("discover-query"),
     type: document.getElementById("discover-type"),
     rating: document.getElementById("discover-rating"),
     dateFrom: document.getElementById("discover-date-from"),
@@ -39,6 +41,7 @@ const discoverState = {
     page: 1,
     totalPages: 1,
     filters: {
+        query: "",
         mediaType: "all",
         voteAverageGte: "",
         releaseDateGte: "",
@@ -47,6 +50,7 @@ const discoverState = {
     items: [],
 };
 
+initTheme();
 bootstrap();
 
 async function bootstrap() {
@@ -64,6 +68,8 @@ async function bootstrap() {
 }
 
 function bindEvents() {
+    bindThemeToggle();
+
     discoverElements.filters.addEventListener("submit", async (event) => {
         event.preventDefault();
         discoverState.page = 1;
@@ -76,6 +82,7 @@ function bindEvents() {
         discoverElements.rating.value = "";
         discoverElements.dateFrom.value = "";
         discoverElements.dateTo.value = "";
+        discoverElements.query.value = "";
         discoverState.page = 1;
         syncFiltersFromForm();
         await loadDiscover();
@@ -141,6 +148,7 @@ function bindEvents() {
 
 function syncFiltersFromForm() {
     discoverState.filters = {
+        query: discoverElements.query.value.trim(),
         mediaType: discoverElements.type.value,
         voteAverageGte: discoverElements.rating.value,
         releaseDateGte: discoverElements.dateFrom.value,
@@ -155,34 +163,48 @@ async function loadGenres() {
 }
 
 async function loadDiscover() {
-    showNotice("Chargement du catalogue...");
+    showNotice(discoverState.filters.query ? "Recherche en cours..." : "Chargement du catalogue...");
     discoverElements.grid.innerHTML = createSkeletonCards(12);
 
     try {
-        const payload = await fetchDiscoverFeed({
-            ...discoverState.filters,
-            page: discoverState.page,
-        });
+        const payload = discoverState.filters.query
+            ? await fetchDiscoverSearchFeed(discoverState.filters.query, {
+                ...discoverState.filters,
+                page: discoverState.page,
+            })
+            : await fetchDiscoverFeed({
+                ...discoverState.filters,
+                page: discoverState.page,
+            });
 
         discoverState.items = payload.items;
         state.discover = payload.items;
         discoverState.page = payload.page;
         discoverState.totalPages = payload.totalPages;
 
-        renderCatalog(discoverElements.grid, discoverState.items, "Aucun contenu ne correspond a ces filtres.");
+        renderCatalog(discoverElements.grid, discoverState.items, discoverState.filters.query
+            ? "Aucun resultat ne correspond a cette recherche."
+            : "Aucun contenu ne correspond a ces filtres.");
         updatePagination(payload.totalResults);
         hideNotice();
     } catch (error) {
         console.error(error);
         state.discover = [];
         discoverElements.grid.innerHTML = "";
-        renderCatalog(discoverElements.grid, [], "Impossible de charger le catalogue.");
-        showNotice("Impossible de charger le catalogue TMDB.");
+        renderCatalog(discoverElements.grid, [], discoverState.filters.query
+            ? "Impossible de charger cette recherche."
+            : "Impossible de charger le catalogue.");
+        showNotice(discoverState.filters.query
+            ? "Impossible de charger la recherche TMDB."
+            : "Impossible de charger le catalogue TMDB.");
     }
 }
 
 function updatePagination(totalResults) {
-    discoverElements.summary.textContent = `${totalResults} resultat(s) . Page ${discoverState.page} sur ${discoverState.totalPages}`;
+    const searchPrefix = discoverState.filters.query
+        ? `Recherche "${discoverState.filters.query}" . `
+        : "";
+    discoverElements.summary.textContent = `${searchPrefix}${totalResults} resultat(s) . Page ${discoverState.page} sur ${discoverState.totalPages}`;
     discoverElements.pageLabel.textContent = `Page ${discoverState.page} / ${discoverState.totalPages}`;
     discoverElements.prev.disabled = discoverState.page <= 1;
     discoverElements.next.disabled = discoverState.page >= discoverState.totalPages;

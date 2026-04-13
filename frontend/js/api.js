@@ -51,6 +51,32 @@ export async function fetchSearchResults(query) {
     return normalizeResults(result.results, 18);
 }
 
+export async function fetchDiscoverSearchFeed(query, filters = {}) {
+    const mediaType = filters.mediaType || "all";
+    const page = String(filters.page || 1);
+    const endpoint = mediaType === "movie" || mediaType === "tv" ? `/search/${mediaType}` : "/search/multi";
+    const result = await fetchTmdbJson(endpoint, {
+        query,
+        page,
+        include_adult: "false",
+    });
+
+    const filteredItems = normalizeResults(result.results || [], 40).filter((item) => {
+        const matchesRating = !filters.voteAverageGte || item.voteAverage >= Number(filters.voteAverageGte);
+        const itemDate = item.date || "";
+        const matchesDateFrom = !filters.releaseDateGte || !itemDate || itemDate >= filters.releaseDateGte;
+        const matchesDateTo = !filters.releaseDateLte || !itemDate || itemDate <= filters.releaseDateLte;
+        return matchesRating && matchesDateFrom && matchesDateTo;
+    });
+
+    return {
+        items: filteredItems,
+        page: result.page || Number(page),
+        totalPages: result.total_pages || 1,
+        totalResults: result.total_results || filteredItems.length,
+    };
+}
+
 export async function fetchDetails(id, mediaType) {
     const cacheKey = `${mediaType}:${id}`;
     if (state.detailsCache.has(cacheKey)) {

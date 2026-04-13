@@ -1,4 +1,8 @@
 import { redirectAuthenticated, registerUser } from "./auth-store.js";
+import { bindThemeToggle, initTheme } from "./theme.js";
+
+initTheme();
+bindThemeToggle();
 
 if (!(await redirectAuthenticated("index.html"))) {
     const form = document.getElementById("signup-form");

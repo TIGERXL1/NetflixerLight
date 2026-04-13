@@ -23,8 +23,10 @@ import {
     state,
     toggleWatchlist,
 } from "./state.js";
+import { bindThemeToggle, initTheme } from "./theme.js";
 import { createSkeletonCards, normalizeResults, pickFeatured } from "./utils.js";
 
+initTheme();
 bootstrap();
 
 async function bootstrap() {
@@ -53,6 +55,8 @@ async function initApp(currentUserData) {
 
 function bindEvents() {
     let searchDebounce = 0;
+
+    bindThemeToggle();
 
     elements.searchInput.addEventListener("input", (event) => {
         window.clearTimeout(searchDebounce);

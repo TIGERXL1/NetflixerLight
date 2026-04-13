@@ -16,6 +16,7 @@
             <a href="index.html#watchlist-section">Ma liste</a>
         </nav>
         <div class="account-bar">
+            <button class="session-button" data-theme-toggle type="button">Theme clair</button>
             <span class="session-pill" id="session-user"></span>
             <button class="session-button" id="logout-button" type="button">Se deconnecter</button>
         </div>
@@ -34,6 +35,10 @@
 
         <section class="media-section discover-filters-section">
             <form class="discover-filters" id="discover-filters">
+                <label class="discover-field discover-field-search">
+                    <span>Recherche</span>
+                    <input id="discover-query" type="search" placeholder="Chercher un film ou une serie" autocomplete="off">
+                </label>
                 <label class="discover-field">
                     <span>Type</span>
                     <select id="discover-type">

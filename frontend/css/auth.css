@@ -9,6 +9,17 @@
     --border: rgba(255, 255, 255, 0.12);
 }
 
+:root[data-theme="light"] {
+    color-scheme: light;
+    --bg: #f4efe8;
+    --bg-top: #f5e2ca;
+    --text: #171c24;
+    --muted: #596578;
+    --brand: #d10b16;
+    --accent: #b36a16;
+    --border: rgba(23, 28, 36, 0.12);
+}
+
 * {
     box-sizing: border-box;
 }
@@ -22,6 +33,13 @@ body {
         radial-gradient(circle at top left, rgba(240, 163, 59, 0.12), transparent 25%),
         radial-gradient(circle at top right, rgba(229, 9, 20, 0.18), transparent 32%),
         linear-gradient(180deg, var(--bg-top) 0%, var(--bg) 40%, #02050a 100%);
+}
+
+:root[data-theme="light"] body {
+    background:
+        radial-gradient(circle at top left, rgba(179, 106, 22, 0.12), transparent 25%),
+        radial-gradient(circle at top right, rgba(209, 11, 22, 0.12), transparent 32%),
+        linear-gradient(180deg, var(--bg-top) 0%, var(--bg) 44%, #eae1d7 100%);
 }
 
 a {
@@ -55,6 +73,13 @@ input {
 .auth-showcase,
 .auth-panel {
     padding: clamp(1.5rem, 4vw, 3rem);
+}
+
+.auth-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
 }
 
 .auth-showcase {
@@ -105,6 +130,11 @@ input {
     gap: 1.25rem;
 }
 
+:root[data-theme="light"] .auth-shell {
+    background: rgba(255, 250, 245, 0.94);
+    box-shadow: 0 30px 90px rgba(98, 69, 37, 0.18);
+}
+
 .auth-panel h1 {
     margin: 0;
     font-size: 2rem;
@@ -148,6 +178,15 @@ input {
     border-radius: 999px;
     background: linear-gradient(135deg, var(--brand), #ff6238);
     color: #fff9f4;
+}
+
+.auth-theme-toggle {
+    min-height: 2.8rem;
+    padding: 0.7rem 1rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text);
 }
 
 .auth-message {
