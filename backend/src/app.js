@@ -50,9 +50,9 @@ app.use(helmet({
 // CORS
 app.use(cors(config.cors));
 
-// Parser JSON
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Parser JSON avec limites de taille (protection DoS)
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Session Express
 app.use(session({
