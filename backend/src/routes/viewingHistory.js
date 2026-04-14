@@ -21,4 +21,10 @@ router.delete('/', viewingHistoryController.clearHistory);
 // DELETE /api/history/:tmdbId/:mediaType - Supprimer une entrée spécifique
 router.delete('/:tmdbId/:mediaType', viewingHistoryController.removeHistoryEntry);
 
+// PUT /api/history/:tmdbId/:mediaType/progress - Mettre a jour la progression
+router.put('/:tmdbId/:mediaType/progress', viewingHistoryController.updateProgress);
+
+// GET /api/history/:tmdbId/:mediaType/progress - Recuperer la progression
+router.get('/:tmdbId/:mediaType/progress', viewingHistoryController.getProgress);
+
 module.exports = router;

@@ -93,6 +93,64 @@ class ViewingHistoryService {
       throw error;
     }
   }
+
+  /**
+   * Met a jour la progression de visionnage
+   * @param {number} userId - ID de l'utilisateur
+   * @param {number} tmdbId - ID TMDB du contenu
+   * @param {string} mediaType - Type de media
+   * @param {number} progressSeconds - Progression en secondes
+   * @param {number} durationSeconds - Duree totale en secondes
+   * @returns {Promise<Object>} Entree mise a jour
+   */
+  static async updateProgress(userId, tmdbId, mediaType, progressSeconds, durationSeconds) {
+    try {
+      if (!userId || !tmdbId || !mediaType || progressSeconds === undefined || durationSeconds === undefined) {
+        throw new Error('Parametres manquants');
+      }
+
+      if (!['movie', 'tv'].includes(mediaType)) {
+        throw new Error('Type de media invalide');
+      }
+
+      const entry = await ViewingHistory.updateProgress(
+        userId,
+        tmdbId,
+        mediaType,
+        progressSeconds,
+        durationSeconds
+      );
+      return entry;
+    } catch (error) {
+      console.error('Erreur dans updateProgress:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Recupere la progression de visionnage
+   * @param {number} userId - ID de l'utilisateur
+   * @param {number} tmdbId - ID TMDB du contenu
+   * @param {string} mediaType - Type de media
+   * @returns {Promise<Object|null>} Progression ou null
+   */
+  static async getProgress(userId, tmdbId, mediaType) {
+    try {
+      if (!userId || !tmdbId || !mediaType) {
+        throw new Error('Parametres manquants');
+      }
+
+      if (!['movie', 'tv'].includes(mediaType)) {
+        throw new Error('Type de media invalide');
+      }
+
+      const progress = await ViewingHistory.getProgress(userId, tmdbId, mediaType);
+      return progress;
+    } catch (error) {
+      console.error('Erreur dans getProgress:', error);
+      throw error;
+    }
+  }
 }
 
 module.exports = ViewingHistoryService;

@@ -1,4 +1,5 @@
 import { buildBackdropUrl, getTrailerVideo } from "./utils.js";
+import { getProgress, updateProgress } from "./progress-api.js";
 
 let currentElements = null;
 let initialized = false;
@@ -9,6 +10,8 @@ let youtubePlayer = null;
 let youtubeApiPromise = null;
 let hideControlsTimeout = 0;
 let progressInterval = 0;
+let progressSaveInterval = 0;
+let currentDetail = null;
 
 export function setPlayerErrorHandler(handler) {
     errorHandler = handler;
@@ -41,6 +44,7 @@ export async function loadPlayer(detail, elements) {
         initPlayer(elements);
     }
 
+    currentDetail = detail;
     const trailer = getTrailerVideo(detail.videos, detail);
     currentTrailerKey = trailer?.key || "";
     currentSearchUrl = buildYouTubeSearchUrl(detail);
@@ -73,7 +77,11 @@ export async function loadPlayer(detail, elements) {
         youtubePlayer.mute();
         youtubePlayer.playVideo();
         currentElements.playerVolume.value = 1;
+
+        await restoreSavedProgress();
+
         startProgressSync();
+        startProgressSave();
         scheduleControlsHide();
     } catch (error) {
         console.error(error);
@@ -94,6 +102,7 @@ export async function startPlayer() {
     try {
         youtubePlayer.playVideo();
         startProgressSync();
+        startProgressSave();
         scheduleControlsHide();
     } catch (error) {
         console.error(error);
@@ -106,9 +115,13 @@ export function stopPlayer() {
         return;
     }
 
+    saveCurrentProgress();
+
     window.clearTimeout(hideControlsTimeout);
     window.clearInterval(progressInterval);
+    window.clearInterval(progressSaveInterval);
     progressInterval = 0;
+    progressSaveInterval = 0;
 
     if (document.fullscreenElement) {
         document.exitFullscreen().catch(() => {});
@@ -125,6 +138,7 @@ export function stopPlayer() {
     destroyPlayer();
     currentTrailerKey = "";
     currentSearchUrl = "";
+    currentDetail = null;
     currentElements.playerShell.classList.add("is-hidden");
     currentElements.playerShell.classList.remove("is-playing");
     currentElements.playerShell.classList.remove("is-controls-hidden");
@@ -214,13 +228,18 @@ function handlePlayerStateChange(event) {
         currentElements.playerShell.classList.add("is-playing");
         setStatus("", false);
         startProgressSync();
+        startProgressSave();
         scheduleControlsHide();
     } else if (stateCode === window.YT.PlayerState.PAUSED) {
         currentElements.playerShell.classList.remove("is-playing");
         currentElements.playerShell.classList.remove("is-controls-hidden");
+        saveCurrentProgress();
+        stopProgressSave();
     } else if (stateCode === window.YT.PlayerState.ENDED) {
         currentElements.playerShell.classList.remove("is-playing");
         currentElements.playerShell.classList.remove("is-controls-hidden");
+        saveCurrentProgress();
+        stopProgressSave();
     } else if (stateCode === window.YT.PlayerState.BUFFERING) {
         setStatus("Mise en memoire tampon...", false);
     }
@@ -400,6 +419,73 @@ function buildYouTubeSearchUrl(detail) {
         .join(" ");
 
     return `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
+}
+
+async function restoreSavedProgress() {
+    if (!currentDetail || !youtubePlayer) {
+        return;
+    }
+
+    try {
+        const savedProgress = await getProgress(currentDetail.id, currentDetail.mediaType);
+
+        if (!savedProgress || !savedProgress.progress_seconds || !savedProgress.duration_seconds) {
+            return;
+        }
+
+        const duration = youtubePlayer.getDuration?.() || 0;
+        if (duration <= 0) {
+            return;
+        }
+
+        const progressPercentage = (savedProgress.progress_seconds / savedProgress.duration_seconds) * 100;
+
+        if (progressPercentage >= 95) {
+            return;
+        }
+
+        const targetTime = (progressPercentage / 100) * duration;
+        youtubePlayer.seekTo(targetTime, true);
+
+        setStatus(`Reprise a ${Math.floor(progressPercentage)}%`, false);
+        setTimeout(() => setStatus("", false), 2000);
+    } catch (error) {
+        console.error("Erreur lors de la restauration de la progression:", error);
+    }
+}
+
+function startProgressSave() {
+    stopProgressSave();
+    progressSaveInterval = window.setInterval(saveCurrentProgress, 5000);
+}
+
+function stopProgressSave() {
+    window.clearInterval(progressSaveInterval);
+    progressSaveInterval = 0;
+}
+
+async function saveCurrentProgress() {
+    if (!currentDetail || !youtubePlayer) {
+        return;
+    }
+
+    try {
+        const duration = youtubePlayer.getDuration?.() || 0;
+        const currentTime = youtubePlayer.getCurrentTime?.() || 0;
+
+        if (duration <= 0 || currentTime <= 0) {
+            return;
+        }
+
+        await updateProgress(
+            currentDetail.id,
+            currentDetail.mediaType,
+            currentTime,
+            duration
+        );
+    } catch (error) {
+        console.error("Erreur lors de la sauvegarde de la progression:", error);
+    }
 }
 
 function formatClock(totalSeconds) {
