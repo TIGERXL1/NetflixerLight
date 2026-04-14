@@ -98,8 +98,31 @@ async function getUserById(userId) {
   };
 }
 
+/**
+ * Change le mot de passe d'un utilisateur
+ * @param {number} userId - ID de l'utilisateur
+ * @param {string} currentPassword - Mot de passe actuel
+ * @param {string} newPassword - Nouveau mot de passe
+ * @returns {Promise<void>}
+ */
+async function changePassword(userId, currentPassword, newPassword) {
+  const user = await User.findByIdWithPassword(userId);
+  if (!user) {
+    throw new Error('Utilisateur non trouvé');
+  }
+
+  const isValidPassword = await bcrypt.compare(currentPassword, user.password);
+  if (!isValidPassword) {
+    throw new Error('Mot de passe actuel incorrect');
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, config.security.bcryptRounds);
+  await User.updatePassword(userId, hashedPassword);
+}
+
 module.exports = {
   register,
   login,
-  getUserById
+  getUserById,
+  changePassword
 };

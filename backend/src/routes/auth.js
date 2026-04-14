@@ -14,5 +14,6 @@ router.post('/login', authLimiter, authController.login);
 // Routes protégées
 router.post('/logout', requireAuth, authController.logout);
 router.get('/profile', requireAuth, authController.getProfile);
+router.post('/change-password', requireAuth, authLimiter, authController.changePassword);
 
 module.exports = router;

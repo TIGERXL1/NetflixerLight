@@ -174,9 +174,37 @@ async function getProfile(req, res) {
   }
 }
 
+/**
+ * Change le mot de passe de l'utilisateur connecté
+ */
+async function changePassword(req, res) {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return errorResponse(res, 'Mot de passe actuel et nouveau mot de passe requis', 400);
+    }
+
+    const passwordValidation = validatePassword(newPassword);
+    if (!passwordValidation.valid) {
+      return errorResponse(res, passwordValidation.message, 400);
+    }
+
+    if (currentPassword === newPassword) {
+      return errorResponse(res, 'Le nouveau mot de passe doit être différent de l\'ancien', 400);
+    }
+
+    await authService.changePassword(req.user.id, currentPassword, newPassword);
+    return successResponse(res, 'Mot de passe mis à jour avec succès');
+  } catch (error) {
+    return errorResponse(res, error.message, 400);
+  }
+}
+
 module.exports = {
   register,
   login,
   logout,
-  getProfile
+  getProfile,
+  changePassword
 };
