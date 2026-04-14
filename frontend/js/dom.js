@@ -13,6 +13,7 @@ export const elements = {
     searchSummary: document.getElementById("search-summary"),
     searchTrack: document.getElementById("search-track"),
     watchlistTrack: document.getElementById("watchlist-track"),
+    recommendationsTrack: document.getElementById("recommendations-track"),
     trendingTrack: document.getElementById("trending-track"),
     moviesTrack: document.getElementById("movies-track"),
     topTrack: document.getElementById("top-track"),

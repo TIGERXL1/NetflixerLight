@@ -1,4 +1,4 @@
-import { fetchDetails, fetchHomeFeed as fetchHomeFeedData, fetchSearchResults } from "./api.js";
+import { fetchDetails, fetchHomeFeed as fetchHomeFeedData, fetchRecommendationsByGenres, fetchSearchResults } from "./api.js";
 import { logoutUser, requireAuth } from "./auth-store.js";
 import { elements } from "./dom.js";
 import {
@@ -47,6 +47,7 @@ async function initApp(currentUserData) {
 
     try {
         await loadHomeFeed();
+        await refreshRecommendations();
     } catch (error) {
         console.error(error);
         showNotice("Impossible de charger le backend ou TMDB pour le moment.");
@@ -231,6 +232,7 @@ function pickMediaItems(result, limit) {
 async function handleWatchlistToggle(item) {
     try {
         await toggleWatchlist(item);
+        await refreshRecommendations();
         renderHero(state.featured);
         renderWatchlist();
         renderAllRows();
@@ -240,6 +242,39 @@ async function handleWatchlistToggle(item) {
         console.error(error);
         showNotice(error.message || "Impossible de mettre à jour les favoris.");
     }
+}
+
+async function refreshRecommendations() {
+    const favoriteGenres = getPreferredGenreIds();
+
+    if (!favoriteGenres.length) {
+        state.rows.recommendations = [];
+        renderAllRows();
+        return;
+    }
+
+    try {
+        const recommendations = await fetchRecommendationsByGenres(favoriteGenres, 12);
+        const watchlistKeys = new Set(state.watchlist.map((item) => `${item.mediaType}:${item.id}`));
+        state.rows.recommendations = recommendations.filter((item) => !watchlistKeys.has(`${item.mediaType}:${item.id}`)).slice(0, 12);
+    } catch (error) {
+        console.error(error);
+        state.rows.recommendations = [];
+    }
+}
+
+function getPreferredGenreIds() {
+    const scores = new Map();
+
+    state.watchlist.forEach((item) => {
+        (item.genreIds || []).forEach((genreId) => {
+            scores.set(genreId, (scores.get(genreId) || 0) + 1);
+        });
+    });
+
+    return [...scores.entries()]
+        .sort((left, right) => right[1] - left[1])
+        .map(([genreId]) => genreId);
 }
 
 function scrollTrack(trackId, direction) {

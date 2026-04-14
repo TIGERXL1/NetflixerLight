@@ -40,6 +40,34 @@ export async function fetchHomeFeed() {
     return { movieGenresResult, tvGenresResult, trendingResult, popularMoviesResult, topMoviesResult, seriesResult, actionResult, comedyResult, horrorResult };
 }
 
+export async function fetchRecommendationsByGenres(genreIds = [], limit = 12) {
+    const selectedGenres = genreIds.filter(Boolean).slice(0, 2);
+    if (!selectedGenres.length) {
+        return [];
+    }
+
+    const results = await Promise.allSettled(
+        selectedGenres.flatMap((genreId) => ([
+            fetchTmdbJson("/discover/movie", {
+                sort_by: "popularity.desc",
+                include_adult: "false",
+                with_genres: String(genreId),
+            }),
+            fetchTmdbJson("/discover/tv", {
+                sort_by: "popularity.desc",
+                include_adult: "false",
+                with_genres: String(genreId),
+            }),
+        ])),
+    );
+
+    const merged = results
+        .filter((result) => result.status === "fulfilled")
+        .flatMap((result) => result.value.results || []);
+
+    return normalizeResults(merged, limit);
+}
+
 export async function fetchGenreLookups() {
     const [movieGenresResult, tvGenresResult] = await Promise.allSettled([
         fetchTmdbJson("/genre/movie/list"),

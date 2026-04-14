@@ -42,6 +42,7 @@ export function closeModal() {
 
 export function renderLoadingTracks() {
     const skeleton = createSkeletonCards(5);
+    elements.recommendationsTrack.innerHTML = skeleton;
     elements.trendingTrack.innerHTML = skeleton;
     elements.moviesTrack.innerHTML = skeleton;
     elements.topTrack.innerHTML = skeleton;
@@ -101,6 +102,7 @@ export function renderWatchlist() {
 }
 
 export function renderAllRows() {
+    renderTrack(elements.recommendationsTrack, state.rows.recommendations, "Ajoute quelques favoris pour obtenir des recommandations.");
     renderTrack(elements.trendingTrack, state.rows.trending, "Aucune tendance disponible.");
     renderTrack(elements.moviesTrack, state.rows.movies, "Aucun film populaire disponible.");
     renderTrack(elements.topTrack, state.rows.top, "Aucun top film disponible.");
