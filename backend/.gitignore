@@ -31,3 +31,7 @@ Thumbs.db
 coverage/
 .nyc_output/
 node_modules/
+
+# Dangerous scripts (database cleaning, etc.)
+scripts/clean-db.js
+scripts/*clean*
