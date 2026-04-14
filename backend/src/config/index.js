@@ -16,15 +16,15 @@ const config = {
 
   // TMDB API
   tmdb: {
-    apiKey: process.env.TMDB_API_KEY || '2dd87e8040906777d4be20c45e75fd6e',
-    bearerToken: process.env.TMDB_BEARER_TOKEN || '',
+    apiKey: process.env.TMDB_API_KEY,
+    bearerToken: process.env.TMDB_BEARER_TOKEN,
     baseUrl: 'https://api.themoviedb.org/3',
     imageBaseUrl: 'https://image.tmdb.org/t/p'
   },
 
   // Session
   session: {
-    secret: process.env.SESSION_SECRET || 'netflixlight-session-secret-CHANGE-IN-PRODUCTION',
+    secret: process.env.SESSION_SECRET,
     maxAge: 24 * 60 * 60 * 1000, // 24 heures en millisecondes
     cookieName: 'netflixlight_session'
   },
