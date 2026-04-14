@@ -139,6 +139,9 @@ async function loadHomeFeed() {
         popularMoviesResult,
         topMoviesResult,
         seriesResult,
+        actionResult,
+        comedyResult,
+        horrorResult,
     } = await fetchHomeFeedData();
 
     hydrateGenreLookup(movieGenresResult, "movie");
@@ -148,6 +151,9 @@ async function loadHomeFeed() {
     state.rows.movies = pickMediaItems(popularMoviesResult, 12);
     state.rows.top = pickMediaItems(topMoviesResult, 12);
     state.rows.series = pickMediaItems(seriesResult, 12);
+    state.rows.action = pickMediaItems(actionResult, 12);
+    state.rows.comedy = pickMediaItems(comedyResult, 12);
+    state.rows.horror = pickMediaItems(horrorResult, 12);
     state.featured = pickFeatured([...state.rows.trending, ...state.rows.movies, ...state.rows.series]);
 
     renderHero(state.featured);

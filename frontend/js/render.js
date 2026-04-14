@@ -46,6 +46,9 @@ export function renderLoadingTracks() {
     elements.moviesTrack.innerHTML = skeleton;
     elements.topTrack.innerHTML = skeleton;
     elements.seriesTrack.innerHTML = skeleton;
+    elements.actionTrack.innerHTML = skeleton;
+    elements.comedyTrack.innerHTML = skeleton;
+    elements.horrorTrack.innerHTML = skeleton;
 }
 
 export function renderHero(item) {
@@ -102,6 +105,9 @@ export function renderAllRows() {
     renderTrack(elements.moviesTrack, state.rows.movies, "Aucun film populaire disponible.");
     renderTrack(elements.topTrack, state.rows.top, "Aucun top film disponible.");
     renderTrack(elements.seriesTrack, state.rows.series, "Aucune serie populaire disponible.");
+    renderTrack(elements.actionTrack, state.rows.action, "Aucun film d'action disponible.");
+    renderTrack(elements.comedyTrack, state.rows.comedy, "Aucun film de comedie disponible.");
+    renderTrack(elements.horrorTrack, state.rows.horror, "Aucun film d'horreur disponible.");
 }
 
 export function renderSearchState() {

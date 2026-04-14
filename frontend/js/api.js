@@ -25,16 +25,19 @@ export async function fetchTmdbJson(path, params = {}) {
 }
 
 export async function fetchHomeFeed() {
-    const [movieGenresResult, tvGenresResult, trendingResult, popularMoviesResult, topMoviesResult, seriesResult] = await Promise.allSettled([
+    const [movieGenresResult, tvGenresResult, trendingResult, popularMoviesResult, topMoviesResult, seriesResult, actionResult, comedyResult, horrorResult] = await Promise.allSettled([
         fetchTmdbJson("/genre/movie/list"),
         fetchTmdbJson("/genre/tv/list"),
         fetchTmdbJson("/trending/all/week"),
         fetchTmdbJson("/movie/popular"),
         fetchTmdbJson("/movie/top_rated"),
         fetchTmdbJson("/tv/popular"),
+        fetchTmdbJson("/discover/movie", { sort_by: "popularity.desc", include_adult: "false", with_genres: "28" }),
+        fetchTmdbJson("/discover/movie", { sort_by: "popularity.desc", include_adult: "false", with_genres: "35" }),
+        fetchTmdbJson("/discover/movie", { sort_by: "popularity.desc", include_adult: "false", with_genres: "27" }),
     ]);
 
-    return { movieGenresResult, tvGenresResult, trendingResult, popularMoviesResult, topMoviesResult, seriesResult };
+    return { movieGenresResult, tvGenresResult, trendingResult, popularMoviesResult, topMoviesResult, seriesResult, actionResult, comedyResult, horrorResult };
 }
 
 export async function fetchGenreLookups() {

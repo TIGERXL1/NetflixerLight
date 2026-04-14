@@ -6,7 +6,7 @@ export const state = {
     activeDetail: null,
     watchlist: [],
     discover: [],
-    rows: { trending: [], movies: [], top: [], series: [] },
+    rows: { trending: [], movies: [], top: [], series: [], action: [], comedy: [], horror: [] },
     searchResults: [],
     searchRequestId: 0,
     detailsCache: new Map(),
@@ -83,6 +83,9 @@ export function findItemByKey(id, mediaType) {
         state.rows.movies,
         state.rows.top,
         state.rows.series,
+        state.rows.action,
+        state.rows.comedy,
+        state.rows.horror,
         state.activeDetail ? [state.activeDetail] : [],
     ];
 
