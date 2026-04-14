@@ -46,7 +46,12 @@ function errorHandler(err, req, res, next) {
 
   // Erreur par défaut
   const statusCode = err.statusCode || 500;
-  const message = err.message || 'Erreur serveur interne';
+  
+  // En production, masquer les détails sensibles pour les erreurs serveur
+  let message = err.message || 'Erreur serveur interne';
+  if (process.env.NODE_ENV === 'production' && statusCode >= 500) {
+    message = 'Une erreur est survenue. Veuillez reessayer ulterieurement.';
+  }
 
   res.status(statusCode).json({
     success: false,
