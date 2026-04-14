@@ -109,6 +109,83 @@ class ViewingHistoryController {
       return errorResponse(res, 'Erreur lors de la suppression de l\'entrée', 500);
     }
   }
+
+  /**
+   * PUT /api/history/:tmdbId/:mediaType/progress
+   * Met a jour la progression de visionnage
+   */
+  static async updateProgress(req, res) {
+    try {
+      const userId = req.user.id;
+      const { tmdbId, mediaType } = req.params;
+      const { progressSeconds, durationSeconds } = req.body;
+
+      // Validation
+      if (!tmdbId || !mediaType) {
+        return errorResponse(res, 'tmdbId et mediaType sont requis', 400);
+      }
+
+      if (!['movie', 'tv'].includes(mediaType)) {
+        return errorResponse(res, 'mediaType doit etre "movie" ou "tv"', 400);
+      }
+
+      if (progressSeconds === undefined || durationSeconds === undefined) {
+        return errorResponse(res, 'progressSeconds et durationSeconds sont requis', 400);
+      }
+
+      if (progressSeconds < 0 || durationSeconds <= 0) {
+        return errorResponse(res, 'Valeurs invalides pour la progression', 400);
+      }
+
+      const entry = await ViewingHistoryService.updateProgress(
+        userId,
+        parseInt(tmdbId),
+        mediaType,
+        parseInt(progressSeconds),
+        parseInt(durationSeconds)
+      );
+
+      return successResponse(res, 'Progression mise a jour', { entry });
+    } catch (error) {
+      console.error('Erreur updateProgress:', error);
+      return errorResponse(res, 'Erreur lors de la mise a jour de la progression', 500);
+    }
+  }
+
+  /**
+   * GET /api/history/:tmdbId/:mediaType/progress
+   * Recupere la progression de visionnage
+   */
+  static async getProgress(req, res) {
+    try {
+      const userId = req.user.id;
+      const { tmdbId, mediaType } = req.params;
+
+      // Validation
+      if (!tmdbId || !mediaType) {
+        return errorResponse(res, 'tmdbId et mediaType sont requis', 400);
+      }
+
+      if (!['movie', 'tv'].includes(mediaType)) {
+        return errorResponse(res, 'mediaType doit etre "movie" ou "tv"', 400);
+      }
+
+      const progress = await ViewingHistoryService.getProgress(
+        userId,
+        parseInt(tmdbId),
+        mediaType
+      );
+
+      if (!progress) {
+        return successResponse(res, 'Aucune progression trouvee', { progress: null });
+      }
+
+      return successResponse(res, 'Progression recuperee', { progress });
+    } catch (error) {
+      console.error('Erreur getProgress:', error);
+      return errorResponse(res, 'Erreur lors de la recuperation de la progression', 500);
+    }
+  }
 }
 
 module.exports = ViewingHistoryController;
