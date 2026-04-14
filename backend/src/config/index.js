@@ -3,6 +3,26 @@
 
 require('dotenv').config();
 
+// Validation des variables d'environnement critiques
+const requiredEnvVars = [
+  'SESSION_SECRET',
+  'JWT_SECRET',
+  'TMDB_API_KEY'
+];
+
+const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+
+if (missingVars.length > 0) {
+  console.error('\n❌ ERREUR DE CONFIGURATION\n');
+  console.error('Variables d\'environnement manquantes :');
+  missingVars.forEach(varName => {
+    console.error(`  - ${varName}`);
+  });
+  console.error('\nVeuillez configurer ces variables dans le fichier .env');
+  console.error('Consultez .env.example pour un modele de configuration.\n');
+  process.exit(1);
+}
+
 const config = {
   // Environnement
   env: process.env.NODE_ENV || 'development',
