@@ -182,6 +182,24 @@ img {
     color: var(--muted);
 }
 
+.session-link {
+    transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.session-link:hover,
+.session-link:focus-visible {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
+    outline: none;
+}
+
+:root[data-theme="light"] .session-link:hover,
+:root[data-theme="light"] .session-link:focus-visible {
+    background: rgba(23, 28, 36, 0.06);
+    border-color: rgba(23, 28, 36, 0.2);
+}
+
 .search-field {
     display: flex;
     align-items: center;
@@ -521,8 +539,17 @@ img {
     overflow: hidden;
 }
 
+.media-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
 .card-hitbox {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
     padding: 0;
     border: 0;
     background: transparent;
@@ -560,6 +587,9 @@ img {
 }
 
 .card-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
     padding: 1rem;
 }
 
@@ -577,12 +607,14 @@ img {
     color: var(--muted);
     font-size: 0.9rem;
     line-height: 1.5;
+    min-height: 4.6rem;
 }
 
 .card-actions {
     display: flex;
     gap: 0.65rem;
-    margin-top: 0.9rem;
+    margin-top: auto;
+    padding-top: 0.9rem;
 }
 
 .ghost-button {
