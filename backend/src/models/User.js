@@ -94,6 +94,49 @@ class User {
       }
     });
   }
+
+  /**
+   * Trouve un utilisateur par ID avec son mot de passe
+   * @param {number} id - ID de l'utilisateur
+   * @returns {Promise<Object|null>} Utilisateur trouvé avec password ou null
+   */
+  static findByIdWithPassword(id) {
+    return new Promise((resolve, reject) => {
+      try {
+        const db = getDatabase();
+        const sql = `SELECT * FROM users WHERE id = ?`;
+
+        const row = db.prepare(sql).get(id);
+        db.close();
+
+        resolve(row || null);
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+
+  /**
+   * Met à jour le mot de passe d'un utilisateur
+   * @param {number} userId - ID de l'utilisateur
+   * @param {string} hashedPassword - Nouveau mot de passe hashé
+   * @returns {Promise<void>}
+   */
+  static updatePassword(userId, hashedPassword) {
+    return new Promise((resolve, reject) => {
+      try {
+        const db = getDatabase();
+        const sql = `UPDATE users SET password = ? WHERE id = ?`;
+
+        db.prepare(sql).run(hashedPassword, userId);
+        db.close();
+
+        resolve();
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
 }
 
 module.exports = User;
