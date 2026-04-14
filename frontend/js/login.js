@@ -1,8 +1,9 @@
 import { loginUser, redirectAuthenticated } from "./auth-store.js";
-import { bindThemeToggle, initTheme } from "./theme.js";
+import { initAuthShowcase } from "./auth-showcase.js";
+import { initTheme } from "./theme.js";
 
 initTheme();
-bindThemeToggle();
+initAuthShowcase();
 
 if (!(await redirectAuthenticated("index.html"))) {
     const form = document.getElementById("login-form");
