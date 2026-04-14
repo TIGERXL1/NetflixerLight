@@ -3,23 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Découvrir | NetflixerLight</title>
+<title>Decouvrir | NetflixerLight</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <div class="page-shell">
     <header class="site-header">
-        <a class="brand" href="index.html" aria-label="Retour à l'accueil">NetflixerLight</a>
+        <a class="brand" href="index.html" aria-label="Retour a l'accueil">NetflixerLight</a>
         <nav class="site-nav" aria-label="Navigation">
             <a href="index.html">Accueil</a>
-            <a href="discover.html" aria-current="page">Découvrir</a>
+            <a href="discover.html" aria-current="page">Decouvrir</a>
+            <a href="index.html#trending-section">Tendances</a>
+            <a href="index.html#movies-section">Films</a>
+            <a href="index.html#series-section">Series</a>
             <a href="index.html#watchlist-section">Ma liste</a>
             <a href="profile.html">Profil</a>
         </nav>
-        <div class="account-bar">
-            <button class="session-button" data-theme-toggle type="button">Thème clair</button>
-            <span class="session-pill" id="session-user"></span>
-            <button class="session-button" id="logout-button" type="button">Se déconnecter</button>
+        <div class="header-tools">
+            <div class="account-bar">
+                <button class="theme-toggle-button" data-theme-toggle type="button"></button>
+                <span class="session-pill" id="session-user"></span>
+                <button class="session-button" id="logout-button" type="button">Se deconnecter</button>
+            </div>
         </div>
     </header>
 
@@ -27,8 +32,8 @@
         <section class="discover-hero">
             <div>
                 <p class="eyebrow">Catalogue</p>
-                <h1 class="discover-title">Découvrir les films et séries</h1>
-                <p class="discover-copy">Explore le catalogue TMDB avec des filtres par type, note minimale et date de sortie.</p>
+                <h1 class="discover-title">Decouvrir les films et les series</h1>
+                <p class="discover-copy">Parcours le catalogue, affine selon tes envies et ouvre les fiches qui t'interessent.</p>
             </div>
         </section>
 
@@ -38,14 +43,14 @@
             <form class="discover-filters" id="discover-filters">
                 <label class="discover-field discover-field-search">
                     <span>Recherche</span>
-                    <input id="discover-query" type="search" placeholder="Chercher un film ou une série" autocomplete="off">
+                    <input id="discover-query" type="search" placeholder="Chercher un film ou une serie" autocomplete="off">
                 </label>
                 <label class="discover-field">
                     <span>Type</span>
                     <select id="discover-type">
-                        <option value="all">Films et séries</option>
+                        <option value="all">Films et series</option>
                         <option value="movie">Films</option>
-                        <option value="tv">Séries</option>
+                        <option value="tv">Series</option>
                     </select>
                 </label>
                 <label class="discover-field">
@@ -68,7 +73,7 @@
                 </label>
                 <div class="discover-actions">
                     <button class="primary-button" type="submit">Appliquer</button>
-                    <button class="ghost-button" id="discover-reset" type="button">Réinitialiser</button>
+                    <button class="ghost-button" id="discover-reset" type="button">Reinitialiser</button>
                 </div>
             </form>
         </section>
@@ -76,14 +81,14 @@
         <section class="media-section">
             <div class="section-header">
                 <div>
-                    <p class="section-kicker">Résultats</p>
+                    <p class="section-kicker">Resultats</p>
                     <h2>Catalogue</h2>
                 </div>
                 <p class="section-copy" id="discover-summary"></p>
             </div>
             <div class="discover-grid" id="discover-grid"></div>
             <div class="discover-pagination">
-                <button class="ghost-button" id="discover-prev" type="button">Page précédente</button>
+                <button class="ghost-button" id="discover-prev" type="button">Page precedente</button>
                 <span class="discover-page-label" id="discover-page-label">Page 1</span>
                 <button class="ghost-button" id="discover-next" type="button">Page suivante</button>
             </div>
@@ -100,7 +105,7 @@
                 <div class="player-video" id="player-frame">
                     <div class="player-mount" id="player-mount"></div>
                 </div>
-                <div class="player-status" id="player-status">Chargement de la vidéo...</div>
+                <div class="player-status" id="player-status">Chargement de la video...</div>
                 <div class="player-overlay" id="player-overlay">
                     <button class="player-center-toggle" id="player-center-toggle" type="button" aria-label="Lecture ou pause">Lecture</button>
                     <div class="player-bottom-bar">
@@ -113,7 +118,7 @@
                                 <span class="player-time" id="player-time">00:00 / 00:00</span>
                             </div>
                             <div class="player-controls-right">
-                                <button class="player-button" id="player-fullscreen-toggle" type="button">Plein écran</button>
+                                <button class="player-button" id="player-fullscreen-toggle" type="button">Plein ecran</button>
                             </div>
                         </div>
                     </div>
@@ -128,7 +133,7 @@
                 <p class="modal-overview" id="modal-overview"></p>
                 <div class="detail-actions">
                     <button class="primary-button" id="modal-trailer" type="button">Lecture</button>
-                    <button class="secondary-button" id="modal-watchlist" type="button">Ajouter à ma liste</button>
+                    <button class="secondary-button" id="modal-watchlist" type="button">Ajouter a ma liste</button>
                 </div>
             </div>
             <aside class="modal-side">
@@ -142,7 +147,7 @@
                         <dd id="modal-language">-</dd>
                     </div>
                     <div>
-                        <dt>Popularité</dt>
+                        <dt>Popularite</dt>
                         <dd id="modal-popularity">-</dd>
                     </div>
                 </dl>

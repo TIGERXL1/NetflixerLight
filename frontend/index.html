@@ -11,22 +11,24 @@
     <header class="site-header">
         <a class="brand" href="#top" aria-label="Retour en haut">NetflixerLight</a>
         <nav class="site-nav" aria-label="Navigation">
-            <a href="discover.html">Découvrir</a>
+            <a href="discover.html">Decouvrir</a>
             <a href="#trending-section">Tendances</a>
             <a href="#movies-section">Films</a>
-            <a href="#series-section">Séries</a>
+            <a href="#series-section">Series</a>
             <a href="#watchlist-section">Ma liste</a>
             <a href="profile.html">Profil</a>
         </nav>
-        <div class="account-bar">
-            <button class="session-button" data-theme-toggle type="button">Thème clair</button>
-            <span class="session-pill" id="session-user"></span>
-            <button class="session-button" id="logout-button" type="button">Se déconnecter</button>
+        <div class="header-tools">
+            <label class="search-field" for="search-input">
+                <span class="search-label">Recherche</span>
+                <input id="search-input" type="search" placeholder="Chercher un film ou une serie" autocomplete="off">
+            </label>
+            <div class="account-bar">
+                <button class="theme-toggle-button" data-theme-toggle type="button"></button>
+                <span class="session-pill" id="session-user"></span>
+                <button class="session-button" id="logout-button" type="button">Se deconnecter</button>
+            </div>
         </div>
-        <label class="search-field" for="search-input">
-            <span class="search-label">Recherche</span>
-            <input id="search-input" type="search" placeholder="Chercher un film ou une série" autocomplete="off">
-        </label>
     </header>
 
     <main class="page-main" id="top">
@@ -34,13 +36,13 @@
             <div class="hero-backdrop" id="hero-backdrop"></div>
             <div class="hero-gradient"></div>
             <div class="hero-body">
-                <p class="eyebrow">Sélection du moment</p>
+                <p class="eyebrow">Selection du moment</p>
                 <h1 class="hero-title" id="hero-title">Chargement...</h1>
                 <div class="hero-meta" id="hero-meta"></div>
-                <p class="hero-overview" id="hero-overview">Découvre les films et séries les plus regardés du moment.</p>
+                <p class="hero-overview" id="hero-overview">Retrouve les films et les series qui font parler d'eux en ce moment.</p>
                 <div class="hero-actions">
                     <button class="primary-button" id="hero-play" type="button">Voir la fiche</button>
-                    <button class="secondary-button" id="hero-list" type="button">Ajouter à ma liste</button>
+                    <button class="secondary-button" id="hero-list" type="button">Ajouter a ma liste</button>
                 </div>
             </div>
         </section>
@@ -51,14 +53,14 @@
             <div class="section-header">
                 <div>
                     <p class="section-kicker">Recherche</p>
-                    <h2>Résultats</h2>
+                    <h2>Resultats</h2>
                 </div>
                 <p class="section-copy" id="search-summary"></p>
             </div>
             <div class="track-frame">
-                <button class="track-nav track-nav-prev" type="button" data-track-prev="search-track" aria-label="Faire défiler les résultats vers la gauche">‹</button>
+                <button class="track-nav track-nav-prev" type="button" data-track-prev="search-track" aria-label="Faire defiler les resultats vers la gauche">&lsaquo;</button>
                 <div class="media-track" id="search-track"></div>
-                <button class="track-nav track-nav-next" type="button" data-track-next="search-track" aria-label="Faire défiler les résultats vers la droite">›</button>
+                <button class="track-nav track-nav-next" type="button" data-track-next="search-track" aria-label="Faire defiler les resultats vers la droite">&rsaquo;</button>
             </div>
         </section>
 
@@ -68,12 +70,12 @@
                     <p class="section-kicker">Personnel</p>
                     <h2>Ma liste</h2>
                 </div>
-                <p class="section-copy">Retrouve ici les contenus que tu as ajoutés à ta liste.</p>
+                <p class="section-copy">Retrouve ici les contenus que tu veux garder sous la main.</p>
             </div>
             <div class="track-frame">
-                <button class="track-nav track-nav-prev" type="button" data-track-prev="watchlist-track" aria-label="Faire défiler la liste vers la gauche">‹</button>
+                <button class="track-nav track-nav-prev" type="button" data-track-prev="watchlist-track" aria-label="Faire defiler la liste vers la gauche">&lsaquo;</button>
                 <div class="media-track" id="watchlist-track"></div>
-                <button class="track-nav track-nav-next" type="button" data-track-next="watchlist-track" aria-label="Faire défiler la liste vers la droite">›</button>
+                <button class="track-nav track-nav-next" type="button" data-track-next="watchlist-track" aria-label="Faire defiler la liste vers la droite">&rsaquo;</button>
             </div>
         </section>
 
@@ -83,42 +85,42 @@
                     <p class="section-kicker">Cette semaine</p>
                     <h2>Tendances</h2>
                 </div>
-                <p class="section-copy">Les films et séries qui ressortent maintenant.</p>
+                <p class="section-copy">Les films et les series qui attirent le plus l'attention en ce moment.</p>
             </div>
             <div class="track-frame">
-                <button class="track-nav track-nav-prev" type="button" data-track-prev="trending-track" aria-label="Faire défiler les tendances vers la gauche">‹</button>
+                <button class="track-nav track-nav-prev" type="button" data-track-prev="trending-track" aria-label="Faire defiler les tendances vers la gauche">&lsaquo;</button>
                 <div class="media-track" id="trending-track"></div>
-                <button class="track-nav track-nav-next" type="button" data-track-next="trending-track" aria-label="Faire défiler les tendances vers la droite">›</button>
+                <button class="track-nav track-nav-next" type="button" data-track-next="trending-track" aria-label="Faire defiler les tendances vers la droite">&rsaquo;</button>
             </div>
         </section>
 
         <section class="media-section" id="movies-section">
             <div class="section-header">
                 <div>
-                    <p class="section-kicker">Cinéma</p>
+                    <p class="section-kicker">Cinema</p>
                     <h2>Films populaires</h2>
                 </div>
-                <p class="section-copy">Les films les plus consultés du moment.</p>
+                <p class="section-copy">Les films les plus consultes du moment.</p>
             </div>
             <div class="track-frame">
-                <button class="track-nav track-nav-prev" type="button" data-track-prev="movies-track" aria-label="Faire défiler les films vers la gauche">‹</button>
+                <button class="track-nav track-nav-prev" type="button" data-track-prev="movies-track" aria-label="Faire defiler les films vers la gauche">&lsaquo;</button>
                 <div class="media-track" id="movies-track"></div>
-                <button class="track-nav track-nav-next" type="button" data-track-next="movies-track" aria-label="Faire défiler les films vers la droite">›</button>
+                <button class="track-nav track-nav-next" type="button" data-track-next="movies-track" aria-label="Faire defiler les films vers la droite">&rsaquo;</button>
             </div>
         </section>
 
         <section class="media-section" id="top-section">
             <div class="section-header">
                 <div>
-                    <p class="section-kicker">Sélection</p>
-                    <h2>Top notés</h2>
+                    <p class="section-kicker">Selection</p>
+                    <h2>Top notes</h2>
                 </div>
-                <p class="section-copy">Les films qui sortent le plus du lot.</p>
+                <p class="section-copy">Des titres tres bien notes qui meritent le detour.</p>
             </div>
             <div class="track-frame">
-                <button class="track-nav track-nav-prev" type="button" data-track-prev="top-track" aria-label="Faire défiler le top vers la gauche">‹</button>
+                <button class="track-nav track-nav-prev" type="button" data-track-prev="top-track" aria-label="Faire defiler le top vers la gauche">&lsaquo;</button>
                 <div class="media-track" id="top-track"></div>
-                <button class="track-nav track-nav-next" type="button" data-track-next="top-track" aria-label="Faire défiler le top vers la droite">›</button>
+                <button class="track-nav track-nav-next" type="button" data-track-next="top-track" aria-label="Faire defiler le top vers la droite">&rsaquo;</button>
             </div>
         </section>
 
@@ -126,16 +128,17 @@
             <div class="section-header">
                 <div>
                     <p class="section-kicker">Streaming</p>
-                    <h2>Séries populaires</h2>
+                    <h2>Series populaires</h2>
                 </div>
-                <p class="section-copy">Les séries à forte traction en ce moment.</p>
+                <p class="section-copy">Les series qui gardent le public accroche en ce moment.</p>
             </div>
             <div class="track-frame">
-                <button class="track-nav track-nav-prev" type="button" data-track-prev="series-track" aria-label="Faire défiler les séries vers la gauche">‹</button>
+                <button class="track-nav track-nav-prev" type="button" data-track-prev="series-track" aria-label="Faire defiler les series vers la gauche">&lsaquo;</button>
                 <div class="media-track" id="series-track"></div>
-                <button class="track-nav track-nav-next" type="button" data-track-next="series-track" aria-label="Faire défiler les séries vers la droite">›</button>
+                <button class="track-nav track-nav-next" type="button" data-track-next="series-track" aria-label="Faire defiler les series vers la droite">&rsaquo;</button>
             </div>
         </section>
+
         <section class="media-section" id="action-section">
             <div class="section-header">
                 <div>
@@ -192,7 +195,7 @@
                 <div class="player-video" id="player-frame">
                     <div class="player-mount" id="player-mount"></div>
                 </div>
-                <div class="player-status" id="player-status">Chargement de la vidéo...</div>
+                <div class="player-status" id="player-status">Chargement de la video...</div>
                 <div class="player-overlay" id="player-overlay">
                     <button class="player-center-toggle" id="player-center-toggle" type="button" aria-label="Lecture ou pause">Lecture</button>
                     <div class="player-bottom-bar">
@@ -205,7 +208,7 @@
                                 <span class="player-time" id="player-time">00:00 / 00:00</span>
                             </div>
                             <div class="player-controls-right">
-                                <button class="player-button" id="player-fullscreen-toggle" type="button">Plein écran</button>
+                                <button class="player-button" id="player-fullscreen-toggle" type="button">Plein ecran</button>
                             </div>
                         </div>
                     </div>
@@ -220,7 +223,7 @@
                 <p class="modal-overview" id="modal-overview"></p>
                 <div class="detail-actions">
                     <button class="primary-button" id="modal-trailer" type="button">Lecture</button>
-                    <button class="secondary-button" id="modal-watchlist" type="button">Ajouter à ma liste</button>
+                    <button class="secondary-button" id="modal-watchlist" type="button">Ajouter a ma liste</button>
                 </div>
             </div>
             <aside class="modal-side">
@@ -234,7 +237,7 @@
                         <dd id="modal-language">-</dd>
                     </div>
                     <div>
-                        <dt>Popularité</dt>
+                        <dt>Popularite</dt>
                         <dd id="modal-popularity">-</dd>
                     </div>
                 </dl>

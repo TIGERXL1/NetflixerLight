@@ -34,9 +34,13 @@ export function bindThemeToggle(selector = "[data-theme-toggle]") {
 }
 
 function syncThemeToggles(theme) {
-    const label = theme === "light" ? "Thème sombre" : "Thème clair";
+    const label = theme === "light" ? "Activer le theme sombre" : "Activer le theme clair";
+    const icon = theme === "light" ? "moon" : "sun";
+
     document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
-        button.textContent = label;
+        button.textContent = "";
         button.setAttribute("aria-label", label);
+        button.setAttribute("title", label);
+        button.dataset.themeIcon = icon;
     });
 }
