@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const Database = require("better-sqlite3");
 
-const dbPath = path.join(__dirname, "..", "database", "netflixlight.db");
+const dbPath = path.join(__dirname, "..", "data", "netflixlight.db");
 const schemaPath = path.join(__dirname, "..", "database", "schema.sql");
 
 const dbDir = path.dirname(dbPath);
