@@ -1,5 +1,5 @@
 // src/routes/movies.js
-// Routes pour l'API TMDB (films et séries)
+// Routes pour l'API TMDB
 
 const express = require('express');
 const router = express.Router();

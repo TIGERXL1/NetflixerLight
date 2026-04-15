@@ -24,7 +24,7 @@ function generateToken(payload) {
 /**
  * Vérifie et décode un token JWT
  * @param {string} token - Token JWT à vérifier
- * @returns {Object|null} Payload décodé ou null si invalide
+ * @returns {Object|null} Payload decoded ou null si invalid
  */
 function verifyToken(token) {
   try {
@@ -32,15 +32,15 @@ function verifyToken(token) {
       algorithms: [JWT_CONFIG.algorithm]
     });
   } catch (error) {
-    console.error('Erreur de vérification JWT:', error.message);
+    console.error('Erreur de vérification JWT :', error.message);
     return null;
   }
 }
 
 /**
- * Décode un token JWT sans vérification (pour debug uniquement)
+ * Décode un token JWT sans vérification (debug)
  * @param {string} token - Token JWT
- * @returns {Object|null} Payload décodé
+ * @returns {Object|null} Payload decoded
  */
 function decodeToken(token) {
   return jwt.decode(token);

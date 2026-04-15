@@ -6,7 +6,6 @@ const router = express.Router();
 const { requireAuth } = require('../middleware/auth');
 const viewingHistoryController = require('../controllers/viewingHistoryController');
 
-// Toutes les routes nécessitent une authentification
 router.use(requireAuth);
 
 // POST /api/history - Ajouter une consultation à l'historique

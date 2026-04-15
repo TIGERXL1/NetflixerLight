@@ -22,15 +22,15 @@ const generalLimiter = rateLimit({
 // Rate limiter strict pour les routes d'authentification
 // 5 tentatives par tranche de 10 minutes (désactivé en test)
 const authLimiter = rateLimit({
-  windowMs: 10 * 60 * 1000, // 10 minutes
-  max: isTestEnv ? 10000 : 5, // Limite très élevée en test
+  windowMs: 10 * 60 * 1000,
+  max: isTestEnv ? 10000 : 5,
   message: {
     success: false,
     message: 'Trop de tentatives de connexion, veuillez réessayer dans 10 minutes'
   },
   standardHeaders: true,
   legacyHeaders: false,
-  skipSuccessfulRequests: true, // Ne compte que les tentatives échouées
+  skipSuccessfulRequests: true,
 });
 
 module.exports = {

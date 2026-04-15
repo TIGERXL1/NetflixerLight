@@ -13,7 +13,7 @@ const requiredEnvVars = [
 const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
 
 if (missingVars.length > 0) {
-  console.error('\n❌ ERREUR DE CONFIGURATION\n');
+  console.error('\n[ERREUR] ERREUR DE CONFIGURATION\n');
   console.error('Variables d\'environnement manquantes :');
   missingVars.forEach(varName => {
     console.error(`  - ${varName}`);

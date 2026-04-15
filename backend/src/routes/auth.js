@@ -7,7 +7,7 @@ const authController = require('../controllers/authController');
 const { requireAuth } = require('../middleware/auth');
 const { authLimiter } = require('../middleware/rateLimiter');
 
-// Routes publiques avec rate limiting strict
+// Routes publiques avec rate limiting
 router.post('/register', authLimiter, authController.register);
 router.post('/login', authLimiter, authController.login);
 

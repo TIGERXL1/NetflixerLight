@@ -13,7 +13,7 @@ try {
   const hasDurationSeconds = tableInfo.some(col => col.name === 'duration_seconds');
   
   if (hasProgressSeconds && hasDurationSeconds) {
-    console.log('Les colonnes existent deja. Migration annulee.');
+    console.log('Les colonnes existent deja. Migration annulee');
     db.close();
     process.exit(0);
   }
@@ -31,8 +31,8 @@ try {
     console.log('  Colonne duration_seconds ajoutee');
   }
   
-  console.log('\nMigration terminee avec succes !');
-  console.log('La table viewing_history peut maintenant stocker la progression de visionnage.\n');
+  console.log('\nMigration terminee faite');
+  console.log('La table viewing_history stock le watchtime\n');
   
   db.close();
 } catch (error) {

@@ -1,23 +1,23 @@
 // src/config/database.js
-// Configuration SQLite pour la base de données utilisateur
+// Config SQLite pour la BDD utilisateur
 
 const Database = require('better-sqlite3');
 const path = require('path');
 
-// Chemin vers la base de données
+// Path vers la BDD
 const DB_PATH = process.env.DB_PATH || path.join(__dirname, '../../data/netflixlight.db');
 
 /**
- * Crée et retourne une connexion à la base de données SQLite
- * @returns {Database} Instance de la base de données
+ * Crée et retourne une connexion à la BDD
+ * @returns {Database} Instance de la BDD
  */
 function getDatabase() {
   try {
     const db = new Database(DB_PATH);
-    console.log('Connecté à la base de données SQLite');
+    console.log('Connecté à la BDD');
     return db;
   } catch (err) {
-    console.error('Erreur de connexion à la base de données:', err.message);
+    console.error('Erreur de connexion à la BDD:', err.message);
     throw err;
   }
 }
@@ -102,9 +102,9 @@ function initializeDatabase() {
       CREATE INDEX IF NOT EXISTS idx_viewing_history_user ON viewing_history(user_id, viewed_at DESC);
     `);
 
-    console.log('✅ Tables de base de données initialisées');
+    console.log('[OK] Tables de BDD initialisées');
   } catch (err) {
-    console.error('Erreur lors de l\'initialisation de la DB:', err.message);
+    console.error('Erreur lors de l\'initialisation de la BDD : ', err.message);
     throw err;
   } finally {
     db.close();
@@ -112,7 +112,7 @@ function initializeDatabase() {
 }
 
 /**
- * Nettoie toutes les tables (pour les tests)
+ * Flush toutes les tables (pour les tests)
  */
 function clearDatabase() {
   const db = getDatabase();
@@ -123,9 +123,9 @@ function clearDatabase() {
     db.exec('DELETE FROM favorites');
     db.exec('DELETE FROM sessions');
     db.exec('DELETE FROM users');
-    console.log('✅ Base de données nettoyée');
+    console.log('[OK] Base de données nettoyée');
   } catch (err) {
-    console.error('Erreur lors du nettoyage de la DB:', err.message);
+    console.error('Erreur lors du nettoyage de la BDD : ', err.message);
     throw err;
   } finally {
     db.close();
@@ -138,7 +138,7 @@ function clearDatabase() {
 function closeDatabase() {
   // SQLite ferme automatiquement les connexions, mais on garde cette fonction
   // pour la compatibilité avec d'autres bases de données futures
-  console.log('✅ Connexion à la base de données fermée');
+  console.log('[OK] Connexion à la base de données fermée');
   return Promise.resolve();
 }
 

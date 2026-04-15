@@ -1,11 +1,11 @@
 // src/models/User.js
-// Modèle utilisateur pour la base de données SQLite
+// Modèle utilisateur pour la BDD
 
 const { getDatabase } = require('../config/database');
 
 class User {
   /**
-   * Crée un nouvel utilisateur dans la base de données
+   * Crée un nouvel utilisateur dans la BDD
    * @param {Object} userData - Données de l'utilisateur
    * @param {string} userData.email - Email de l'utilisateur
    * @param {string} userData.username - Nom d'utilisateur

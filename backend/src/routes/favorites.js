@@ -6,7 +6,6 @@ const router = express.Router();
 const favoritesController = require('../controllers/favoritesController');
 const { requireAuth } = require('../middleware/auth');
 
-// Toutes les routes de favoris nécessitent l'authentification
 router.use(requireAuth);
 
 router.get('/', favoritesController.getUserFavorites);

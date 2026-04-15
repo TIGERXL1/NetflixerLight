@@ -68,7 +68,7 @@ class ViewingHistoryController {
 
       const deletedCount = await ViewingHistoryService.clearHistory(userId);
 
-      return successResponse(res, 'Historique effacé avec succès', { deletedCount });
+      return successResponse(res, 'Historique effacé', { deletedCount });
     } catch (error) {
       console.error('Erreur clearHistory:', error);
       return errorResponse(res, 'Erreur lors de l\'effacement de l\'historique', 500);
@@ -163,11 +163,11 @@ class ViewingHistoryController {
 
       // Validation
       if (!tmdbId || !mediaType) {
-        return errorResponse(res, 'tmdbId et mediaType sont requis', 400);
+        return errorResponse(res, 'tmdbId et mediaType sont réquis', 400);
       }
 
       if (!['movie', 'tv'].includes(mediaType)) {
-        return errorResponse(res, 'mediaType doit etre "movie" ou "tv"', 400);
+        return errorResponse(res, 'mediaType doit être "movie" ou "tv"', 400);
       }
 
       const progress = await ViewingHistoryService.getProgress(
@@ -177,13 +177,13 @@ class ViewingHistoryController {
       );
 
       if (!progress) {
-        return successResponse(res, 'Aucune progression trouvee', { progress: null });
+        return successResponse(res, 'Aucune progression trouvée', { progress: null });
       }
 
-      return successResponse(res, 'Progression recuperee', { progress });
+      return successResponse(res, 'Progression récuperée', { progress });
     } catch (error) {
       console.error('Erreur getProgress:', error);
-      return errorResponse(res, 'Erreur lors de la recuperation de la progression', 500);
+      return errorResponse(res, 'Erreur lors de la récupération de la progression', 500);
     }
   }
 }

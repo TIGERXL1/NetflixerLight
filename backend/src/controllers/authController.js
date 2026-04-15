@@ -5,7 +5,7 @@ const authService = require('../services/authService');
 const { successResponse, errorResponse } = require('../utils/response');
 
 /**
- * Valide la conformité d'un mot de passe selon ANSSI 2026
+ * Valide la conformité d'un mot de passe selon les critères de l'ANSSI 2026
  * @param {string} password - Mot de passe à valider
  * @returns {Object} { valid: boolean, message: string }
  */

@@ -17,20 +17,20 @@ class RecommendationService {
     try {
       const { mediaType = 'both', limit = 20 } = options;
 
-      // Étape 1 : Récupérer les préférences utilisateur
+      //Récupéère les préférences utilisateur
       const favorites = await Favorite.getUserFavorites(userId);
       const allRatings = await Rating.getUserRatings(userId);
       const highRatings = allRatings.filter(r => r.rating >= 4);
 
-      // Combiner favoris et notes élevées
+      // Combine favoris et notes élevées
       const likedContent = [...favorites, ...highRatings];
 
-      // Si aucune donnée, retourner des contenus populaires
+      // Si aucune donnée, retourne des contenus populaires
       if (likedContent.length === 0) {
         return this._getDefaultRecommendations(mediaType, limit);
       }
 
-      // Étape 2 : Extraire les genres préférés
+      //Extrait les genres préférés
       const genreCounts = {};
       
       for (const item of likedContent) {
@@ -43,12 +43,12 @@ class RecommendationService {
             });
           }
         } catch (error) {
-          // Ignorer les erreurs pour un contenu spécifique
+          // Ignore les erreurs pour un contenu spécifique
           console.error(`Erreur lors de la récupération des détails pour ${item.tmdb_id}:`, error.message);
         }
       }
 
-      // Étape 3 : Sélectionner les top 3 genres
+      // Sélectionne les top 3 genres
       const topGenres = Object.entries(genreCounts)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 3)
@@ -58,13 +58,13 @@ class RecommendationService {
         return this._getDefaultRecommendations(mediaType, limit);
       }
 
-      // Étape 4 : Récupérer les contenus déjà vus
+      // Récupère les contenus déjà vus
       const seenIds = new Set([
         ...favorites.map(f => `${f.tmdb_id}-${f.media_type}`),
         ...allRatings.map(r => `${r.tmdb_id}-${r.media_type}`)
       ]);
 
-      // Étape 5 : Découvrir des contenus basés sur les genres préférés
+      // Découvre les contenus basés sur les genres préférés
       const recommendations = await this._discoverByGenres(
         topGenres,
         mediaType,
@@ -72,7 +72,7 @@ class RecommendationService {
         limit
       );
 
-      // Obtenir les noms des genres pour les métadonnées
+      // Obtiens les noms des genres pour les métadonnées
       const genreNames = await this._getGenreNames(topGenres, mediaType);
 
       return {
@@ -107,13 +107,13 @@ class RecommendationService {
         });
 
         if (response.results) {
-          // Filtrer les contenus déjà vus
+          // Filtre les contenus déjà vus
           const filtered = response.results.filter(item => {
             const key = `${item.id}-${type}`;
             return !seenIds.has(key);
           });
 
-          // Ajouter le type de média à chaque résultat
+          // Ajoute le type de média à chaque résultat
           filtered.forEach(item => {
             item.media_type = type;
           });
@@ -125,7 +125,7 @@ class RecommendationService {
       }
     }
 
-    // Mélanger les résultats et limiter
+    // Mélange les résultats et les limite
     return this._shuffleAndLimit(results, limit);
   }
 
@@ -178,7 +178,7 @@ class RecommendationService {
       const types = mediaType === 'both' ? ['movie', 'tv'] : [mediaType];
       const genreMap = new Map();
 
-      // Récupérer les genres pour chaque type de média
+      // Récupère les genres pour chaque type de média
       for (const type of types) {
         const response = await tmdbService.getGenres(type);
         if (response.genres) {
@@ -188,7 +188,7 @@ class RecommendationService {
         }
       }
 
-      // Mapper les IDs aux noms
+      // Mappe les IDs aux noms
       genreIds.forEach(id => {
         const name = genreMap.get(parseInt(id));
         if (name && !names.includes(name)) {

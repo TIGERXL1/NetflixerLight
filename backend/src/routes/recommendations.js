@@ -6,7 +6,6 @@ const router = express.Router();
 const { requireAuth } = require('../middleware/auth');
 const recommendationController = require('../controllers/recommendationController');
 
-// Toutes les routes nécessitent une authentification
 router.use(requireAuth);
 
 // GET /api/recommendations - Obtenir des recommandations personnalisées

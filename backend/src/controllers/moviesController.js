@@ -5,13 +5,13 @@ const tmdbService = require('../services/tmdbService');
 const { successResponse, errorResponse } = require('../utils/response');
 
 /**
- * Récupère les contenus tendance
+ * Récupère les contenus trending
  */
 async function getTrending(req, res) {
   try {
     const { mediaType = 'all', timeWindow = 'week' } = req.query;
     const data = await tmdbService.getTrending(mediaType, timeWindow);
-    return successResponse(res, 'Contenus tendance récupérés', data);
+    return successResponse(res, 'Contenus trending récupérés', data);
   } catch (error) {
     return errorResponse(res, error.message, 500);
   }

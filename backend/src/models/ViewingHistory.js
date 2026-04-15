@@ -1,5 +1,5 @@
 // src/models/ViewingHistory.js
-// Modèle historique de visionnage pour la base de données SQLite
+// Modèle historique de visionnage pour la BDD
 
 const { getDatabase } = require('../config/database');
 
@@ -114,7 +114,7 @@ class ViewingHistory {
       try {
         const db = getDatabase();
 
-        // Verifier si une entree existe deja
+        // Check si une entree existe deja
         const existing = db.prepare(`
           SELECT id FROM viewing_history 
           WHERE user_id = ? AND tmdb_id = ? AND media_type = ?
@@ -163,11 +163,11 @@ class ViewingHistory {
   }
 
   /**
-   * Recupere la progression de visionnage pour un contenu
+   * Recupère la progression de visionnage pour un contenu
    * @param {number} userId - ID de l'utilisateur
    * @param {number} tmdbId - ID TMDB du contenu
    * @param {string} mediaType - Type de media
-   * @returns {Promise<Object|null>} Progression ou null si non trouvee
+   * @returns {Promise<Object|null>} Progression ou null si non trouvée
    */
   static getProgress(userId, tmdbId, mediaType) {
     return new Promise((resolve, reject) => {

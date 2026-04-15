@@ -1,5 +1,5 @@
 // src/models/Favorite.js
-// Modèle favoris pour la base de données SQLite
+// Modèle favoris pour la BDD
 
 const { getDatabase } = require('../config/database');
 
