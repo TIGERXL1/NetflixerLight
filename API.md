@@ -454,6 +454,3 @@ Récupère des recommandations basées sur des genres.
 - Les sessions expirent après 24h d'inactivité
 
 ---
-
-**Documentation générée pour NetflixLight v1.0**  
-*B1 Informatique - Ynov Campus Toulouse - 2025*
