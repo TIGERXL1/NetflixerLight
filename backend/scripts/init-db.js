@@ -16,7 +16,7 @@ const schema = fs.readFileSync(schemaPath, "utf8");
 try {
     db.exec(schema);
     console.log("Database initialized successfully at:", dbPath);
-    console.log("Tables created: users, watchlist, ratings");
+    console.log("Tables created: users, watchlist, ratings, viewing_history");
 } catch (error) {
     console.error("Error initializing database:", error.message);
     process.exit(1);

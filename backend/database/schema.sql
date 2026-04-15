@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS watchlist (
     added_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     UNIQUE(user_id, tmdb_id, media_type)
-);
+    );
 
 CREATE TABLE IF NOT EXISTS ratings (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,7 +30,19 @@ CREATE TABLE IF NOT EXISTS ratings (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     UNIQUE(user_id, tmdb_id, media_type)
-);
+    );
+
+CREATE TABLE IF NOT EXISTS viewing_history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    tmdb_id INTEGER NOT NULL,
+    media_type TEXT NOT NULL CHECK(media_type IN ('movie', 'tv')),
+    progress_seconds INTEGER DEFAULT 0,
+    duration_seconds INTEGER DEFAULT 0,
+    viewed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    );
 
 CREATE INDEX IF NOT EXISTS idx_watchlist_user ON watchlist(user_id);
 CREATE INDEX IF NOT EXISTS idx_ratings_user ON ratings(user_id);
+CREATE INDEX IF NOT EXISTS idx_viewing_history_user ON viewing_history(user_id, viewed_at DESC);
