@@ -67,7 +67,7 @@ NetflixLight est une application web reproduisant les fonctionnalités essentiel
 1. **Cloner le repository**
 ```bash
 git clone <repository-url>
-cd Projet-NetflixLight
+cd NetflixerLight/backend
 ```
 
 2. **Installer les dépendances**
