@@ -16,6 +16,7 @@ import {
     hydrateGenreLookup,
     isInWatchlist,
     loadWatchlist,
+    loadUserRatings,
     state,
     toggleWatchlist,
 } from "./state.js";
@@ -63,7 +64,7 @@ async function bootstrap() {
     bindEvents();
     discoverElements.grid.innerHTML = createSkeletonCards(12);
 
-    await Promise.all([loadWatchlist(), loadGenres()]);
+    await Promise.all([loadWatchlist(), loadUserRatings(), loadGenres()]);
     await loadDiscover();
 }
 

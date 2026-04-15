@@ -1,6 +1,6 @@
 import { BACKDROP_FALLBACK } from "./config.js";
 import { elements } from "./dom.js";
-import { getGenreNames, isInWatchlist, state } from "./state.js";
+import { getGenreNames, getUserRating, isInWatchlist, setUserRatingInState, removeUserRatingFromState, state } from "./state.js";
 import {
     buildBackdropUrl,
     buildPosterUrl,
@@ -12,6 +12,8 @@ import {
     getTrailerVideo,
 } from "./utils.js";
 import { loadPlayer, setPlayerErrorHandler, startPlayer, stopPlayer } from "./player.js";
+import { createStarsElement, createReadOnlyStarsHTML } from "./ratings-ui.js";
+import { setRating, deleteRating } from "./ratings-api.js";
 
 setPlayerErrorHandler((message) => {
     showNotice(message);
@@ -142,6 +144,40 @@ export function renderModal(detail) {
     elements.modalPopularity.textContent = detail.popularity ? detail.popularity.toFixed(1) : "-";
     elements.modalWatchlist.textContent = isInWatchlist(detail.id, detail.mediaType) ? "Retirer de ma liste" : "Ajouter à ma liste";
 
+    const currentRating = getUserRating(detail.id, detail.mediaType);
+    elements.modalRatingStars.innerHTML = "";
+    const starsElement = createStarsElement(currentRating, async (rating) => {
+        const success = await setRating(detail.id, detail.mediaType, rating);
+        if (success) {
+            setUserRatingInState(detail.id, detail.mediaType, rating);
+            elements.modalRatingDelete.classList.remove("is-hidden");
+        }
+    });
+    elements.modalRatingStars.appendChild(starsElement);
+
+    if (currentRating) {
+        elements.modalRatingDelete.classList.remove("is-hidden");
+    } else {
+        elements.modalRatingDelete.classList.add("is-hidden");
+    }
+
+    elements.modalRatingDelete.onclick = async () => {
+        const success = await deleteRating(detail.id, detail.mediaType);
+        if (success) {
+            removeUserRatingFromState(detail.id, detail.mediaType);
+            elements.modalRatingStars.innerHTML = "";
+            const newStarsElement = createStarsElement(null, async (rating) => {
+                const success = await setRating(detail.id, detail.mediaType, rating);
+                if (success) {
+                    setUserRatingInState(detail.id, detail.mediaType, rating);
+                    elements.modalRatingDelete.classList.remove("is-hidden");
+                }
+            });
+            elements.modalRatingStars.appendChild(newStarsElement);
+            elements.modalRatingDelete.classList.add("is-hidden");
+        }
+    };
+
     if (trailer) {
         elements.modalTrailer.textContent = "Voir la bande-annonce";
         elements.modalTrailer.classList.remove("is-hidden");
@@ -194,6 +230,9 @@ function createCardMarkup(item) {
     const isSaved = isInWatchlist(item.id, item.mediaType);
     const toggleLabel = isSaved ? "✓" : "+";
     const toggleTitle = isSaved ? "Retirer de ma liste" : "Ajouter à ma liste";
+    
+    const userRating = getUserRating(item.id, item.mediaType);
+    const ratingHTML = userRating ? createReadOnlyStarsHTML(userRating) : "";
 
     return `
         <article class="media-card">
@@ -209,6 +248,7 @@ function createCardMarkup(item) {
             <div class="card-body">
                 <h3 class="card-title">${escapeHtml(item.title)}</h3>
                 <p class="card-copy">${escapeHtml(metaParts.join(" . "))}</p>
+                ${ratingHTML ? `<div class="card-rating">${ratingHTML}</div>` : ""}
                 <div class="card-actions">
                     <button class="ghost-button" type="button" data-open-details data-id="${item.id}" data-media-type="${item.mediaType}">Détails</button>
                     <button class="ghost-button watchlist-icon-button" type="button" data-toggle-watchlist data-id="${item.id}" data-media-type="${item.mediaType}" aria-label="${toggleTitle}" title="${toggleTitle}">${toggleLabel}</button>

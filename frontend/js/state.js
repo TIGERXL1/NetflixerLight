@@ -1,5 +1,6 @@
 import { addFavorite, fetchFavorites, removeFavorite } from "./favorites-api.js";
 import { getItemKey, normalizeItem } from "./utils.js";
+import { getAllRatings } from "./ratings-api.js";
 
 export const state = {
     featured: null,
@@ -11,6 +12,7 @@ export const state = {
     searchRequestId: 0,
     detailsCache: new Map(),
     genreLookup: { movie: new Map(), tv: new Map() },
+    userRatings: new Map(),
 };
 
 export async function loadWatchlist() {
@@ -99,3 +101,34 @@ export function findItemByKey(id, mediaType) {
 
     return null;
 }
+
+export async function loadUserRatings() {
+    try {
+        const ratings = await getAllRatings();
+        state.userRatings.clear();
+        ratings.forEach((rating) => {
+            const key = getItemKey(rating.tmdb_id, rating.media_type);
+            state.userRatings.set(key, rating.rating);
+        });
+    } catch (error) {
+        console.error("Erreur loadUserRatings:", error);
+        state.userRatings.clear();
+    }
+    return state.userRatings;
+}
+
+export function getUserRating(tmdbId, mediaType) {
+    const key = getItemKey(tmdbId, mediaType);
+    return state.userRatings.get(key) || null;
+}
+
+export function setUserRatingInState(tmdbId, mediaType, rating) {
+    const key = getItemKey(tmdbId, mediaType);
+    state.userRatings.set(key, rating);
+}
+
+export function removeUserRatingFromState(tmdbId, mediaType) {
+    const key = getItemKey(tmdbId, mediaType);
+    state.userRatings.delete(key);
+}
+

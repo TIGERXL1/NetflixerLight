@@ -20,6 +20,7 @@ import {
     findItemByKey,
     hydrateGenreLookup,
     loadWatchlist,
+    loadUserRatings,
     state,
     toggleWatchlist,
 } from "./state.js";
@@ -43,6 +44,7 @@ async function initApp(currentUserData) {
     bindEvents();
     renderLoadingTracks();
     await loadWatchlist();
+    await loadUserRatings();
     renderWatchlist();
 
     try {
@@ -248,8 +250,14 @@ async function refreshRecommendations() {
     const favoriteGenres = getPreferredGenreIds();
 
     if (!favoriteGenres.length) {
-        state.rows.recommendations = [];
-        renderAllRows();
+        const defaultGenres = [28, 12, 16, 35, 80, 18];
+        try {
+            const recommendations = await fetchRecommendationsByGenres(defaultGenres, 12);
+            state.rows.recommendations = recommendations.slice(0, 12);
+        } catch (error) {
+            console.error(error);
+            state.rows.recommendations = [];
+        }
         return;
     }
 
